@@ -27,7 +27,7 @@ function Base.show(io::IO,cat::Catalog)
     if length(cat.items) > 0
         println(io,"Items:")
         for (id,item) in cat.items
-            print(ident," * ")
+            print(io,ident," * ")
             printstyled(io, id, "\n", color=item_color)
         end
     end
