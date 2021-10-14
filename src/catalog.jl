@@ -17,15 +17,15 @@ function Base.show(io::IO,cat::Catalog)
 
     ident = "  "
     if length(cat.children) > 0
-        println("Children:")
+        println(io,"Children:")
         for (id,child) in cat.children
-            print(ident," * ")
+            print(io,ident," * ")
             printstyled(io, id, "\n", color=cat_color)
         end
     end
 
     if length(cat.items) > 0
-        println("Items:")
+        println(io,"Items:")
         for (id,item) in cat.items
             print(ident," * ")
             printstyled(io, id, "\n", color=item_color)
