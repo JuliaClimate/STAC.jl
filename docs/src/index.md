@@ -4,7 +4,7 @@ CurrentModule = STAC
 
 # STAC
 
-Documentation for [STAC](https://github.com/Alexander-Barth/STAC.jl).
+Documentation for [STAC](https://github.com/JuliaClimate/STAC.jl).
 
 ```@index
 ```

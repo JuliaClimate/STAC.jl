@@ -1,9 +1,9 @@
 # STAC
 
-[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://Alexander-Barth.github.io/STAC.jl/stable)
-[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://Alexander-Barth.github.io/STAC.jl/dev)
-[![Build Status](https://github.com/Alexander-Barth/STAC.jl/workflows/CI/badge.svg)](https://github.com/Alexander-Barth/STAC.jl/actions)
-[![Coverage](https://codecov.io/gh/Alexander-Barth/STAC.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/Alexander-Barth/STAC.jl)
+[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://JuliaClimate.github.io/STAC.jl/stable)
+[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://JuliaClimate.github.io/STAC.jl/dev)
+[![Build Status](https://github.com/JuliaClimate/STAC.jl/workflows/CI/badge.svg)](https://github.com/JuliaClimate/STAC.jl/actions)
+[![Coverage](https://codecov.io/gh/JuliaClimate/STAC.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/JuliaClimate/STAC.jl)
 
 
 This package is an experimental implementation of the [SpatioTemporal Asset Catalogs](https://stacspec.org/) (STAC) client in Julia.
