@@ -6,7 +6,7 @@
 [![Coverage](https://codecov.io/gh/Alexander-Barth/STAC.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/Alexander-Barth/STAC.jl)
 
 
-This package is an experimental implementation of the SpatioTemporal Asset Catalogs (STAC) client in Julia.
+This package is an experimental implementation of the [SpatioTemporal Asset Catalogs](https://stacspec.org/) (STAC) client in Julia.
 
 Opening an issue to notify about a missing feature is not helpful for the momement. However, if somebody is interested to make a pull request to implement a missing feature, an issue is a good way to discuss its implementation.
 
