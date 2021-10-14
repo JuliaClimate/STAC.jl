@@ -8,6 +8,7 @@ using Test
     cat = STACatalog(url)
     @show id(cat)
 
+    @test length(keys(cat)) > 0
     @show keys(cat)
 
     subcat = cat["stac-catalog-eo"]

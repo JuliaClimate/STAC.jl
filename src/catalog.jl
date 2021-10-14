@@ -49,7 +49,7 @@ The `url` should point to a JSON object conforming to the
 `cat` behaves as a julia dictionary with all STAC subcatalogs. `cat.items` is a
 dictionary with all STAC items.
 
-```jldoctest
+```julia
 using STACatalogs
 url = "https://raw.githubusercontent.com/sat-utils/sat-stac/master/test/catalog/catalog.json"
 cat = STACatalog(url)
