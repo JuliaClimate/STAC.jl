@@ -33,9 +33,17 @@ function Base.show(io::IO,cat::Catalog)
     end
 end
 
-for prop in [:id,:description]
-    @eval $prop(cat::Union{Catalog,Item}) = cat.data[$prop]
-    @eval export $prop
+
+for (prop,name) in ((:id, "identifier"),
+                    (:description, "description"))
+    @eval begin
+        @doc """
+             data = $($prop)(cat::Catalog)
+             Get the $($name) of STAC catalog.
+        """
+        $prop(cat::Catalog) = cat.data[$prop]
+        export $prop
+    end
 end
 
 
@@ -92,6 +100,22 @@ end
 Base.keys(cat::Catalog) = keys(cat.children)
 Base.getindex(cat::Catalog,child_id::String) = cat.children[child_id]
 
+
+"""
+    cats = eachcatalog(catalog::Catalog)
+
+Returns resursively all subcatalogs in `catalog`.
+This can take a long time for deeply nested catalogs.
+
+```julia
+url = "https://raw.githubusercontent.com/sat-utils/sat-stac/master/test/catalog/catalog.json"
+
+cat = STACatalog(url)
+for c in eachcatalog(cat)
+    @show id(c)
+end
+```
+"""
 function eachcatalog(catalog::Catalog)
     function _each(channel,cat)
         for (id,child) in cat.children
@@ -102,6 +126,21 @@ function eachcatalog(catalog::Catalog)
     return Channel{Catalog}(channel -> _each(channel,catalog))
 end
 
+"""
+    cats = eachitem(catalog::Catalog)
+
+Returns resursively all items in `catalog`.
+This can take a long time for deeply nested catalogs.
+
+```julia
+url = "https://raw.githubusercontent.com/sat-utils/sat-stac/master/test/catalog/catalog.json"
+
+cat = STACatalog(url)
+for c in eachitem(cat)
+    @show id(c)
+end
+```
+"""
 function eachitem(catalog::Catalog)
     function _each(channel,cat)
         for (id,item) in cat.items

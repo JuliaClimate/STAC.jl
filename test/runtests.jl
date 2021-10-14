@@ -23,7 +23,15 @@ using Test
     @show subcat1
 
     item = subcat1.items["LC08_L1TP_152038_20200611_20200611_01_RT"]
+
+    bbox(item)
+    geometry(item)
+    links(item)
+    properties(item)
+
     @show item.assets[:B4][:href]
+
+    STACatalogs.set_cache_max_size(10000)
 
     for c in eachcatalog(cat)
         @show id(c)

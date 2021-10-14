@@ -1,11 +1,13 @@
 module STACatalogs
 
-using JSON3
-using HTTP
-using URIs
-using DataStructures
 import Base: keys, getindex, show, length, iterate
+using DataStructures
+using GeoJSON
+using HTTP
+using JSON3
 using LRUCache
+using Preferences
+using URIs
 
 include("cache.jl")
 include("utils.jl")
