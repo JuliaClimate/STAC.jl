@@ -38,8 +38,9 @@ for (prop,name) in ((:id, "identifier"),
                     (:description, "description"))
     @eval begin
         @doc """
-             data = $($prop)(cat::Catalog)
-             Get the $($name) of STAC catalog.
+    data = $($prop)(cat::Catalog)
+
+Get the $($name) of STAC catalog.
         """
         $prop(cat::Catalog) = cat.data[$prop]
         export $prop
@@ -66,7 +67,7 @@ subcat1 = subcat["landsat-8-l1"]
 @show subcat1
 
 item = subcat1.items["LC08_L1TP_152038_20200611_20200611_01_RT"]
-@show item.assets[:B4][:href]
+@show href(item.assets["B4"])
 ```
 """
 function STACatalog(url)

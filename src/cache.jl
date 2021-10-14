@@ -22,5 +22,5 @@ The Julia session need to be restated for this change to take effect.
 """
 function set_cache_max_size(cache_max_size::Integer)
     @set_preferences!("cache_max_size" => cache_max_size)
-    @info("New cache maximum size set; restart your Julia session for this change to take effect!")
+    @info("New cache maximum size set; restart your Julia session for this change to take effect")
 end
