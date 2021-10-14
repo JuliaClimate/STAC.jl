@@ -22,5 +22,5 @@ subcat1 = subcat["landsat-8-l1"]
 @show subcat1
 
 item = subcat1.items["LC08_L1TP_152038_20200611_20200611_01_RT"]
-@show href(item.assets[:B4])
+@show href(item.assets["B4"])
 ```
