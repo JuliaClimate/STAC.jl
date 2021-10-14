@@ -1,4 +1,4 @@
-name = "STACatalogs"
+name = "STAC"
 uuid = "08e62803-e111-4f53-be9b-274ff296e9da"
 authors = ["Alexander Barth <barth.alexander@gmail.com> and contributors"]
 version = "0.1.0"

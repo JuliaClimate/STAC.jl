@@ -15,7 +15,7 @@ function cached_resolve(url)
 end
 
 """
-    STACatalogs.set_cache_max_size(cache_max_size::Integer)
+    STAC.set_cache_max_size(cache_max_size::Integer)
 
 Set the maximum number of URLs saved in cache (permanentaly). The default is 1000.
 The Julia session need to be restated for this change to take effect.

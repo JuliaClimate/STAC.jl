@@ -1,14 +1,14 @@
 ```@meta
-CurrentModule = STACatalogs
+CurrentModule = STAC
 ```
 
-# STACatalogs
+# STAC
 
-Documentation for [STACatalogs](https://github.com/Alexander-Barth/STACatalogs.jl).
+Documentation for [STAC](https://github.com/Alexander-Barth/STAC.jl).
 
 ```@index
 ```
 
 ```@autodocs
-Modules = [STACatalogs]
+Modules = [STAC]
 ```

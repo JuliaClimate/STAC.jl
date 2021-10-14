@@ -49,7 +49,7 @@ end
 
 
 """
-    cat = STACatalog(url)
+    cat = STAC.Catalog(url)
 
 Open a SpatioTemporal Asset Catalog (STAC) using the provided `url`.
 The `url` should point to a JSON object conforming to the
@@ -59,9 +59,9 @@ The `url` should point to a JSON object conforming to the
 dictionary with all STAC items.
 
 ```julia
-using STACatalogs
+using STAC
 url = "https://raw.githubusercontent.com/sat-utils/sat-stac/master/test/catalog/catalog.json"
-cat = STACatalog(url)
+cat = STAC.Catalog(url)
 subcat = cat["stac-catalog-eo"]
 subcat1 = subcat["landsat-8-l1"]
 @show subcat1
@@ -70,12 +70,12 @@ item = subcat1.items["LC08_L1TP_152038_20200611_20200611_01_RT"]
 @show href(item.assets["B4"])
 ```
 """
-function STACatalog(url)
+function Catalog(url::String)
     data = cached_resolve(url)
 
     listc = filter(l -> l[:rel] == "child",data[:links])
     children = LazyOrderedDict{String,Catalog}(listc,nothing) do link
-        subcat = _subcat(STACatalog,link,url)
+        subcat = _subcat(Catalog,link,url)
         id(subcat) => subcat
     end
 
@@ -111,7 +111,7 @@ This can take a long time for deeply nested catalogs.
 ```julia
 url = "https://raw.githubusercontent.com/sat-utils/sat-stac/master/test/catalog/catalog.json"
 
-cat = STACatalog(url)
+cat = STAC.Catalog(url)
 for c in eachcatalog(cat)
     @show id(c)
 end
@@ -136,7 +136,7 @@ This can take a long time for deeply nested catalogs.
 ```julia
 url = "https://raw.githubusercontent.com/sat-utils/sat-stac/master/test/catalog/catalog.json"
 
-cat = STACatalog(url)
+cat = STAC.Catalog(url)
 for c in eachitem(cat)
     @show id(c)
 end
@@ -154,5 +154,4 @@ function eachitem(catalog::Catalog)
     return Channel{Item}(channel -> _each(channel,catalog))
 end
 
-export STACatalog
 export eachitem, eachcatalog

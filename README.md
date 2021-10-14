@@ -1,9 +1,9 @@
-# STACatalogs
+# STAC
 
-[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://Alexander-Barth.github.io/STACatalogs.jl/stable)
-[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://Alexander-Barth.github.io/STACatalogs.jl/dev)
-[![Build Status](https://github.com/Alexander-Barth/STACatalogs.jl/workflows/CI/badge.svg)](https://github.com/Alexander-Barth/STACatalogs.jl/actions)
-[![Coverage](https://codecov.io/gh/Alexander-Barth/STACatalogs.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/Alexander-Barth/STACatalogs.jl)
+[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://Alexander-Barth.github.io/STAC.jl/stable)
+[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://Alexander-Barth.github.io/STAC.jl/dev)
+[![Build Status](https://github.com/Alexander-Barth/STAC.jl/workflows/CI/badge.svg)](https://github.com/Alexander-Barth/STAC.jl/actions)
+[![Coverage](https://codecov.io/gh/Alexander-Barth/STAC.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/Alexander-Barth/STAC.jl)
 
 
 This package is an experimental implementation of the SpatioTemporal Asset Catalogs (STAC) client in Julia.
@@ -14,9 +14,9 @@ Opening an issue to notify about a missing feature is not helpful for the momeme
 ## Example
 
 ``` julia
-using STACatalogs
+using STAC
 url = "https://raw.githubusercontent.com/sat-utils/sat-stac/master/test/catalog/catalog.json"
-cat = STACatalog(url)
+cat = STAC.Catalog(url)
 subcat = cat["stac-catalog-eo"]
 subcat1 = subcat["landsat-8-l1"]
 @show subcat1

@@ -1,16 +1,16 @@
-using STACatalogs
+using STAC
 using Documenter
 
-DocMeta.setdocmeta!(STACatalogs, :DocTestSetup, :(using STACatalogs); recursive=true)
+DocMeta.setdocmeta!(STAC, :DocTestSetup, :(using STAC); recursive=true)
 
 makedocs(;
-    modules=[STACatalogs],
+    modules=[STAC],
     authors="Alexander Barth <barth.alexander@gmail.com> and contributors",
-    repo="https://github.com/Alexander-Barth/STACatalogs.jl/blob/{commit}{path}#{line}",
-    sitename="STACatalogs.jl",
+    repo="https://github.com/Alexander-Barth/STAC.jl/blob/{commit}{path}#{line}",
+    sitename="STAC.jl",
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", "false") == "true",
-        canonical="https://Alexander-Barth.github.io/STACatalogs.jl",
+        canonical="https://Alexander-Barth.github.io/STAC.jl",
         assets=String[],
     ),
     pages=[
@@ -19,6 +19,6 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="github.com/Alexander-Barth/STACatalogs.jl",
+    repo="github.com/Alexander-Barth/STAC.jl",
     devbranch="main",
 )

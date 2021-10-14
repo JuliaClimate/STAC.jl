@@ -1,4 +1,4 @@
-using STACatalogs
+using STAC
 using Test
 
 
@@ -7,11 +7,12 @@ function testshow(s,substr)
     show(io,s)
     @test occursin(substr,String(take!(io)))
 end
-@testset "STACatalogs.jl" begin
+
+@testset "STAC.jl" begin
 
     url = "https://raw.githubusercontent.com/sat-utils/sat-stac/master/test/catalog/catalog.json"
 
-    cat = STACatalog(url)
+    cat = STAC.Catalog(url)
     @show id(cat)
 
     @test length(keys(cat)) > 0
@@ -42,7 +43,7 @@ end
     testshow(assetB4,"type")
 
 
-    STACatalogs.set_cache_max_size(10000)
+    STAC.set_cache_max_size(10000)
 
     for c in eachcatalog(cat)
         @show id(c)
