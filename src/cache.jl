@@ -18,9 +18,16 @@ end
     STAC.set_cache_max_size(cache_max_size::Integer)
 
 Set the maximum number of URLs saved in cache (permanentaly). The default is 1000.
-The Julia session need to be restated for this change to take effect.
 """
 function set_cache_max_size(cache_max_size::Integer)
     @set_preferences!("cache_max_size" => cache_max_size)
-    @info("New cache maximum size set; restart your Julia session for this change to take effect")
+    resize!(CACHE; maxsize = cache_max_size)
 end
+
+
+"""
+    STAC.empty_cache()
+
+Empty the URL cache.
+"""
+empty_cache() = empty!(CACHE)

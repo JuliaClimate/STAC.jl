@@ -53,4 +53,16 @@ end
         @show id(item)
         @test length(bbox(item)) == 4
     end
+
+    STAC.set_title_color(:light_red)
+    @test STAC.title_color[] == :light_red
+
+    STAC.set_catalog_color(:green)
+    @test STAC.catalog_color[] == :green
+
+    STAC.set_item_color(:cyan)
+    @test STAC.item_color[] == :cyan
+
+    STAC.empty_cache()
+    @test length(STAC.CACHE) == 0
 end
