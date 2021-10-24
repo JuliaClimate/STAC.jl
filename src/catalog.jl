@@ -7,12 +7,7 @@ struct Catalog
 end
 
 function Base.show(io::IO,cat::Catalog)
-    # TODO use preferences for color
-    title_color = Base.warn_color()
-    cat_color = Base.info_color()
-    item_color = Base.info_color()
-
-    printstyled(io, id(cat), "\n", bold=true, color=title_color)
+    printstyled(io, id(cat), "\n", bold=true, color=title_color[])
     printstyled(io, description(cat), "\n")
 
     ident = "  "
@@ -20,7 +15,7 @@ function Base.show(io::IO,cat::Catalog)
         println(io,"Children:")
         for (id,child) in cat.children
             print(io,ident," * ")
-            printstyled(io, id, "\n", color=cat_color)
+            printstyled(io, id, "\n", color=catalog_color[])
         end
     end
 
@@ -28,7 +23,7 @@ function Base.show(io::IO,cat::Catalog)
         println(io,"Items:")
         for (id,item) in cat.items
             print(io,ident," * ")
-            printstyled(io, id, "\n", color=item_color)
+            printstyled(io, id, "\n", color=item_color[])
         end
     end
 end

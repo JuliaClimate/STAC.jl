@@ -41,3 +41,32 @@ function Base.iterate(ld::LazyOrderedDict, state = copy(ld.list))
 
     return (ld.fun(popfirst!(state)), state)
 end
+
+
+
+for (item_color,default) in (
+    (:title_color, :error_color),
+    (:catalog_color, :info_color),
+    (:item_color, :info_color),
+)
+
+    item_color_str = String(item_color)
+    item_str = split(item_color_str,"_")[1]
+    default_str = String(default)
+
+    @eval begin
+        $item_color = Ref(Symbol(load_preference(STAC,$(item_color_str), Base.$default())))
+
+        """
+        STAC.set_$($item_color_str)(color::Symbol)
+
+Set the $($item_str) color. The default color is `Base.$($default_str)()`.
+"""
+        function $(Symbol(:set_,item_color))(color::Symbol)
+            @set_preferences!($(item_color_str) => String(color))
+            $item_color[] = color
+        end
+
+    end
+end
+

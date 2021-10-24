@@ -18,10 +18,7 @@ Get the $($name) of STAC `asset`.
 end
 
 function Base.show(io::IO,asset::Asset)
-    # TODO use preferences for color
-    title_color = Base.warn_color()
-
-    printstyled(io, title(asset), "\n", bold=true, color=title_color)
+    printstyled(io, title(asset), "\n", bold=true, color=title_color[])
     try
         printstyled(io, description(asset), "\n")
     catch

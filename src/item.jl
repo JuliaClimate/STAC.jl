@@ -55,13 +55,9 @@ end
 
 
 function Base.show(io::IO,item::Item)
-    # TODO use preferences for color
-    title_color = Base.warn_color()
-    item_color = Base.info_color()
-
     fmt(x) = @sprintf("%0.6f",x)
     west, south, east, north = fmt.(bbox(item))
-    printstyled(io, id(item), "\n", bold=true, color=title_color)
+    printstyled(io, id(item), "\n", bold=true, color=title_color[])
     printstyled(io, "bounding box:\n")
     print(io,"""
      ┌──────$(north )───────┐
@@ -82,7 +78,7 @@ $(west)                $(east)
         println(io,"Assets:")
         for (id,asset) in item.assets
             print(io,ident," * ")
-            printstyled(io, id, color=item_color)
+            printstyled(io, id, color=item_color[])
 
             try
                 print(io,": ",title(asset),"")
