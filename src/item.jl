@@ -49,7 +49,7 @@ export geometry
 
 function Item(url)
     data = cached_resolve(url)
-    assets = OrderedDict((String(k) => Asset(v) for (k,v) in data[:assets]))
+    assets = _assets(data)
     return Item(url,data,assets)
 end
 
@@ -68,23 +68,6 @@ $(west)                $(east)
 
 """)
 
-    dt = DateTime(item)
-    if dt != nothing
-        printstyled(io, "date time: $dt\n")
-    end
-
-    ident = "  "
-    if length(item.assets) > 0
-        println(io,"Assets:")
-        for (id,asset) in item.assets
-            print(io,ident," * ")
-            printstyled(io, id, color=item_color[])
-
-            try
-                print(io,": ",title(asset),"")
-            catch
-            end
-            printstyled(io, "\n")
-        end
-    end
+    _printstyled(io, "date time: ",DateTime(item),"\n")
+    _show_assets(io,item)
 end

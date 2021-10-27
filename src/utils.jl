@@ -48,6 +48,7 @@ for (item_color,default) in (
     (:title_color, :error_color),
     (:catalog_color, :info_color),
     (:item_color, :info_color),
+    (:asset_color, :info_color),
 )
 
     item_color_str = String(item_color)
@@ -70,3 +71,33 @@ Set the $($item_str) color. The default color is `Base.$($default_str)()`.
     end
 end
 
+# print unless one argument is nothing
+function _print(args...; kwargs...)
+    if !any(isnothing,args)
+        print(args...; kwargs...)
+    end
+end
+
+function _printstyled(args...; kwargs...)
+    if !any(isnothing,args)
+        printstyled(args...; kwargs...)
+    end
+end
+
+_assets(data) = OrderedDict((String(k) => Asset(v) for (k,v) in get(data,:assets,[])))
+
+function _show_assets(io,item)
+    ident = "  "
+
+    if length(item.assets) > 0
+        println(io,"Assets:")
+        for (id,asset) in item.assets
+            print(io,ident," * ")
+            printstyled(io, id, color=asset_color[])
+
+            _print(io,": ",title(asset),"")
+            printstyled(io, "\n")
+        end
+    end
+
+end

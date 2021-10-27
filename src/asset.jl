@@ -8,23 +8,18 @@ for (prop,name) in ((:href, "URI"),
                     (:type, "type"))
     @eval begin
         @doc """
-     data = $($prop)(asset)
+     data = $($prop)(asset; default = nothing)
 
-Get the $($name) of STAC `asset`.
+Get the $($name) of a STAC `asset` (or `default` if it is not specified).
         """
-        $prop(asset::Asset) = asset.data[$prop]
+        $prop(asset::Asset; default = nothing) = get(asset.data,$prop,default)
         export $prop
     end
 end
 
 function Base.show(io::IO,asset::Asset)
-    printstyled(io, title(asset), "\n", bold=true, color=title_color[])
-    try
-        printstyled(io, description(asset), "\n")
-    catch
-    end
-    try
-        printstyled(io, "type: ",type(asset), "\n")
-    catch
-    end
+    _printstyled(io, "title: ",title(asset), "\n", bold=true, color=title_color[])
+    _printstyled(io, description(asset), "\n")
+    _printstyled(io, "type: ",type(asset), "\n")
+    _printstyled(io, "href: ",href(asset), "\n")
 end

@@ -14,6 +14,16 @@ end
 
     cat = STAC.Catalog(url)
     @show id(cat)
+    @show type(cat)
+    @show stac_version(cat)
+    @show stac_extensions(cat)
+    @show title(cat)
+    @show description(cat)
+    @show keywords(cat)
+    @show license(cat)
+    @show providers(cat)
+    @show extent(cat)
+    @test summaries(cat, default = "foobar") == "foobar"
 
     @test length(keys(cat)) > 0
     @show keys(cat)

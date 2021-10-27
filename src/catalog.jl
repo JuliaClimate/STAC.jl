@@ -4,11 +4,13 @@ struct Catalog
     parent
     children
     items
+    assets
 end
 
 function Base.show(io::IO,cat::Catalog)
     printstyled(io, id(cat), "\n", bold=true, color=title_color[])
-    printstyled(io, description(cat), "\n")
+    _printstyled(io, title(cat), "\n")
+    _printstyled(io, description(cat), "\n")
 
     ident = "  "
     if length(cat.children) > 0
@@ -26,18 +28,31 @@ function Base.show(io::IO,cat::Catalog)
             printstyled(io, id, "\n", color=item_color[])
         end
     end
+
+    _show_assets(io,cat)
 end
 
 
-for (prop,name) in ((:id, "identifier"),
-                    (:description, "description"))
+for (prop,name) in (
+    (:type, "type"),
+    (:stac_version, "stac version"),
+    (:stac_extensions, "stac extensions"),
+    (:id, "identifier"),
+    (:title, "title"),
+    (:description, "description"),
+    (:keywords, "keywords"),
+    (:license, "license"),
+    (:providers, "providers"),
+    (:extent, "extent"),
+    (:summaries, "summaries"),
+    )
     @eval begin
         @doc """
-    data = $($prop)(cat::Catalog)
+    data = $($prop)(cat::Catalog; default = nothing)
 
-Get the $($name) of STAC catalog.
+Get the $($name) of a STAC catalog (or `default` if it is not specified).
         """
-        $prop(cat::Catalog) = cat.data[$prop]
+        $prop(cat::Catalog; default=nothing) = get(cat.data,$prop,default)
         export $prop
     end
 end
@@ -81,8 +96,9 @@ function Catalog(url::String)
     end
 
     parent = nothing
+    assets = _assets(data)
 
-    return Catalog(url,data,parent,children,items)
+    return Catalog(url,data,parent,children,items,assets)
 end
 
 function _subcat(T,child,url)
