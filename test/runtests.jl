@@ -1,6 +1,6 @@
 using STAC
 using Test
-
+using Dates
 
 function testshow(s,substr)
     io = IOBuffer()
@@ -75,4 +75,17 @@ end
 
     STAC.empty_cache()
     @test length(STAC.CACHE) == 0
+end
+
+
+
+@testset "search" begin
+    collections = "landsat-8-c2-l2"
+    time_range = (DateTime(2018,01,01), DateTime(2018,01,02))
+    lon_range = (2.51357303225, 6.15665815596)
+    lat_range = (49.5294835476, 51.4750237087)
+    cat = STAC.Catalog("https://planetarycomputer.microsoft.com/api/stac/v1")
+
+    search_results = collect(search(cat, collections, lon_range, lat_range, time_range))
+    @test length(search_results) == 2
 end

@@ -2,7 +2,7 @@ module STAC
 
 import Base: keys, getindex, show, length, iterate
 import CFTime
-using Dates: DateTime
+using Dates
 using DataStructures
 using GeoJSON
 using HTTP
@@ -17,5 +17,6 @@ include("utils.jl")
 include("asset.jl")
 include("item.jl")
 include("catalog.jl")
+include("search.jl")
 
 end
