@@ -2,7 +2,8 @@ module STAC
 
 import Base: keys, getindex, show, length, iterate
 import CFTime
-using Dates
+import Dates: DateTime
+import Dates
 using DataStructures
 using GeoJSON
 using HTTP

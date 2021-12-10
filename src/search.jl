@@ -26,7 +26,7 @@ search_results = collect(search(cat, collections, lon_range, lat_range, time_ran
 
 """
 function search(cat::Catalog, collections, lon_range, lat_range, time_range; limit = 200)
-    format_datetime(x::Union{Date,DateTime}) = Dates.format(x,dateformat"yyyy-mm-ddTHH:MM:SS.sssZ")
+    format_datetime(x::Union{Dates.Date,Dates.DateTime}) = Dates.format(x,Dates.dateformat"yyyy-mm-ddTHH:MM:SS.sssZ")
     format_datetime(x::Union{AbstractVector,Tuple}) = join(format_datetime.(x),"/")
 
     west, east = lon_range
@@ -36,8 +36,6 @@ function search(cat::Catalog, collections, lon_range, lat_range, time_range; lim
         "collections" => collections,
         "bbox" => bbox,
         "limit" => limit,
-        #"datetime" => string(datetime)
-        #"datetime" => "2018-01-01T00:00:00Z/2018-01-01T23:59:59Z",
         "datetime" => format_datetime(time_range),
     )
 

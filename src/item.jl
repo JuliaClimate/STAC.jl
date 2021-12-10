@@ -32,7 +32,7 @@ if this properties is not specified).
 function DateTime(item::Item)
     if haskey(item.data.properties,:datetime)
         dt = item.data.properties[:datetime]
-        return CFTime.parseDT(DateTime,dt)
+        return CFTime.parseDT(Dates.DateTime,dt)
     else
         return nothing
     end
