@@ -1,6 +1,8 @@
 # STAC
 
+<!--
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://JuliaClimate.github.io/STAC.jl/stable)
+-->
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://JuliaClimate.github.io/STAC.jl/dev)
 [![Build Status](https://github.com/JuliaClimate/STAC.jl/workflows/CI/badge.svg)](https://github.com/JuliaClimate/STAC.jl/actions)
 [![Coverage](https://codecov.io/gh/JuliaClimate/STAC.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/JuliaClimate/STAC.jl)
