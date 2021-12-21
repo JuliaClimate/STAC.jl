@@ -17,7 +17,8 @@ function Base.show(io::IO,cat::Catalog)
         println(io,"Children:")
         for (id,child) in cat.children
             print(io,ident," * ")
-            printstyled(io, id, "\n", color=catalog_color[])
+            printstyled(io, id, color=catalog_color[])
+            printstyled(io, ": ",title(cat[id]), "\n")
         end
     end
 
