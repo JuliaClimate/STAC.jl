@@ -19,9 +19,9 @@ time_range = (DateTime(2018,01,01), DateTime(2018,01,02))
 lon_range = (2.51357303225, 6.15665815596)
 lat_range = (49.5294835476, 51.4750237087)
 
-cat = STAC.Catalog("https://planetarycomputer.microsoft.com/api/stac/v1")
+catalog = STAC.Catalog("https://planetarycomputer.microsoft.com/api/stac/v1")
 
-search_results = collect(search(cat, collections, lon_range, lat_range, time_range))
+search_results = collect(search(catalog, collections, lon_range, lat_range, time_range))
 ```
 
 """
@@ -39,7 +39,7 @@ function search(cat::Catalog, collections, lon_range, lat_range, time_range; lim
         "datetime" => format_datetime(time_range),
     )
 
-    @show query
+    @debug "query: $query"
     url = string(URI(URI(cat.url * "/search"), query = query))
 
     ch = Channel{STAC.Item}() do c
