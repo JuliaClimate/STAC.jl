@@ -1,5 +1,7 @@
 mutable struct LazyOrderedDict{K,V} <: AbstractDict{K,V}
+    # function to generate (key => value) for every element in list
     fun
+    getindex_guess
     list
     data::Union{Nothing,OrderedDict{K,V}}
 end
@@ -21,6 +23,12 @@ function Base.keys(ld::LazyOrderedDict)
 end
 
 function Base.getindex(ld::LazyOrderedDict{K,V},id::K) where {K,V}
+    if ld.getindex_guess != nothing
+        guess = ld.getindex_guess(ld.list,ld.fun,id)
+        if guess != nothing
+            return guess
+        end
+    end
     load!(ld)
     return ld.data[id]
 end

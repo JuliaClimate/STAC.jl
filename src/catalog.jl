@@ -59,6 +59,22 @@ Get the $($name) of a STAC catalog (or `default` if it is not specified).
 end
 
 
+
+function _getindex_guess(listc,fun,id)
+    for item in listc
+        probable_id = split(item.href,"/")[end]
+        if id == probable_id
+            (k,v) = fun(item)
+            if k == id
+                @debug "guess getindex: found $id"
+                # bingo!
+                return v
+            end
+        end
+    end
+    return nothing
+end
+
 """
     cat = STAC.Catalog(url)
 
@@ -85,13 +101,13 @@ function Catalog(url::String)
     data = cached_resolve(url)
 
     listc = filter(l -> l[:rel] == "child",data[:links])
-    children = LazyOrderedDict{String,Catalog}(listc,nothing) do link
+    children = LazyOrderedDict{String,Catalog}(_getindex_guess,listc,nothing) do link
         subcat = _subcat(Catalog,link,url)
         id(subcat) => subcat
     end
 
     listi = filter(l -> l[:rel] == "item",data[:links])
-    items = LazyOrderedDict{String,Item}(listi,nothing) do link
+    items = LazyOrderedDict{String,Item}(nothing,listi,nothing) do link
         subcat = _subcat(Item,link,url)
         id(subcat) => subcat
     end
