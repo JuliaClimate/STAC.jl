@@ -13,9 +13,19 @@ This package is an experimental implementation of the [SpatioTemporal Asset Cata
 Opening an issue to notify about a missing feature is not helpful for the momement. However, if somebody is interested to make a pull request to implement a missing feature, an issue is a good way to discuss its implementation.
 
 
+## Installation
+
+You need [Julia](https://julialang.org/downloads) (version 1.6 or later).
+Inside a Julia terminal, you can download and install `STAC` issuing these commands:
+
+```julia
+using Pkg
+Pkg.add(url="https://github.com/JuliaClimate/STAC.jl")
+```
+
 ## Example
 
-Accessing a catalog and sub-catalogs:
+Accessing a catalog and sub-catalogs are indexed with their identitiers. To find all subcatalog identifiers, one can simply display the catalog structure in a julia session. 
 
 ``` julia
 using STAC
