@@ -25,7 +25,7 @@ Pkg.add(url="https://github.com/JuliaClimate/STAC.jl")
 
 ## Example
 
-Accessing a catalog and sub-catalogs are indexed with their identitiers. To find all subcatalog identifiers can simply display the catalog structure in a julia session. 
+Accessing a catalog and sub-catalogs are indexed with their identitiers. To find all subcatalog identifiers, one can simply display the catalog structure in a julia session. 
 
 ``` julia
 using STAC
@@ -38,8 +38,6 @@ subcat1 = subcat["landsat-8-l1"]
 item = subcat1.items["LC08_L1TP_152038_20200611_20200611_01_RT"]
 @show href(item.assets["B4"])
 ```
-
-
 
 Searching by date range and bounding box:
 
