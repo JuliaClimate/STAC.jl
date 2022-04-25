@@ -126,8 +126,34 @@ function _subcat(T,child,url)
     return T(cc)
 end
 
+"""
+    child_ids = keys(cat::Catalog)
+    subcat = cat[child_id]
+
+Returns all subcatalog identifiers of the STAC catalog `cat`.
+
+```julia
+url = "https://raw.githubusercontent.com/sat-utils/sat-stac/master/test/catalog/catalog.json"
+cat = STAC.Catalog(url);
+keys(cat)
+```
+"""
 Base.keys(cat::Catalog) = keys(cat.children)
-Base.getindex(cat::Catalog,child_id::String) = cat.children[child_id]
+
+
+"""
+    subcat = getindex(cat::Catalog,child_id::AbstractString)
+    subcat = cat[child_id]
+
+Returns the subcatalogs with the identifier `child_id`
+
+```julia
+url = "https://raw.githubusercontent.com/sat-utils/sat-stac/master/test/catalog/catalog.json"
+cat = STAC.Catalog(url);
+subcat = cat["stac-catalog-eo"]
+```
+"""
+Base.getindex(cat::Catalog,child_id::AbstractString) = cat.children[child_id]
 
 
 """
