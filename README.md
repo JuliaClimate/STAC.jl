@@ -44,9 +44,9 @@ Searching by date range and bounding box:
 ``` julia
 using STAC, Dates
 collections = "landsat-8-c2-l2"
-time_range = (DateTime(2018,01,01), DateTime(2018,01,02))
-lon_range = (2.51357303225, 6.15665815596)
-lat_range = (49.5294835476, 51.4750237087)
+time_range = (DateTime(2018,01,01), DateTime(2018,01,02)) # start and end time
+lon_range = (2.51357303225, 6.15665815596)  # west, east
+lat_range = (49.5294835476, 51.4750237087)  # south, north
 
 catalog = STAC.Catalog("https://planetarycomputer.microsoft.com/api/stac/v1")
 
