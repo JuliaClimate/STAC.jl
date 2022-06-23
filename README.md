@@ -79,3 +79,5 @@ opendap_url = [href(item.assets["opendap"]) for item in collection]
 @show length(opendap_url)
 # output 365, one URL per day
 ```
+
+To load the dataset, the NetCDF library need to be made aware of your EarthData username and password as explained [here](https://alexander-barth.github.io/NCDatasets.jl/latest/tutorials/#NASA-EarthData). 
