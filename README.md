@@ -52,3 +52,30 @@ catalog = STAC.Catalog("https://planetarycomputer.microsoft.com/api/stac/v1")
 
 search_results = collect(search(catalog, collections, lon_range, lat_range, time_range))
 ```
+
+
+### NASA EarthData
+
+Retrieve a list of OPeNDAP URLs from the NASA [Common Metadata Repository (CMR)](https://www.earthdata.nasa.gov/eosdis/science-system-description/eosdis-components/cmr) of the collection [C1996881146-POCLOUD](https://cmr.earthdata.nasa.gov/search/concepts/C1996881146-POCLOUD.html). A token is obtained from [https://urs.earthdata.nasa.gov/home](https://urs.earthdata.nasa.gov/home) (after registration and login) and clicking on `Generate Token`:
+
+
+```julia
+using STAC, URIs, Dates
+
+token = "put_your_user_token_here"
+timerange = (DateTime(2019,1,1),DateTime(2019,12,31))
+collection_concept_id = "C1996881146-POCLOUD"
+baseurl = "https://cmr.earthdata.nasa.gov/search/granules.stac"
+
+url = string(URI(URI(baseurl), query = Dict(
+    "collection_concept_id" => collection_concept_id,
+    "temporal" => join(string.(timerange),','),
+    "pageSize" => 1000, # default is 100
+    "token" => token)))
+
+collection = STAC.FeatureCollection(url)
+opendap_url = [href(item.assets["opendap"]) for item in collection]
+
+@show length(opendap_url)
+# output 365, one URL per day
+```
