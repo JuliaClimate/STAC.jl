@@ -1,4 +1,27 @@
 
+function FeatureCollection(url)
+    ch = Channel{STAC.Item}() do c
+        while true
+            @debug "get $url"
+            r = HTTP.get(url)
+            data = JSON3.read(String(r.body))
+            for d in data[:features]
+                put!(c,STAC.Item("",d,STAC._assets(d)))
+            end
+
+            # check if there is a next page
+            next = filter(d -> get(d,"rel",nothing) == "next",data[:links])
+            # no more next page
+            if length(next) == 0
+                break
+            else
+                url = next[1][:href]
+            end
+        end
+    end
+end
+
+
 """
     search(cat::Catalog, collections, lon_range, lat_range, datetime; limit = 200)
 
@@ -42,25 +65,7 @@ function search(cat::Catalog, collections, lon_range, lat_range, time_range; lim
     @debug "query: $query"
     url = string(URI(URI(cat.url * "/search"), query = query))
 
-    ch = Channel{STAC.Item}() do c
-        while true
-            @debug "get $url"
-            r = HTTP.get(url)
-            data = JSON3.read(String(r.body))
-            for d in data[:features]
-                put!(c,STAC.Item("",d,STAC._assets(d)))
-            end
-
-            # check if there is a next page
-            next = filter(d -> get(d,"rel",nothing) == "next",data[:links])
-            # no more next page
-            if length(next) == 0
-                break
-            else
-                url = next[1][:href]
-            end
-        end
-    end
+    return FeatureCollection(url)
 end
 
 export search
