@@ -13,20 +13,20 @@ end
     url = "https://raw.githubusercontent.com/sat-utils/sat-stac/master/test/catalog/catalog.json"
 
     cat = STAC.Catalog(url)
-    @show id(cat)
-    @show type(cat)
-    @show stac_version(cat)
-    @show stac_extensions(cat)
-    @show title(cat)
-    @show description(cat)
-    @show keywords(cat)
-    @show license(cat)
-    @show providers(cat)
-    @show extent(cat)
+
+    @test id(cat) == "stac-catalog"
+    @test occursin("1.",stac_version(cat))
+    @test stac_extensions(cat) == nothing
+    @test title(cat) == nothing
+    @test description(cat) == "An example STAC catalog"
+    @test keywords(cat) == nothing
+    @test license(cat) == nothing
+    @test providers(cat) == nothing
+    @test extent(cat) == nothing
     @test summaries(cat, default = "foobar") == "foobar"
 
     @test length(keys(cat)) > 0
-    @show keys(cat)
+    @test keys(cat) == ["stac-catalog-eo"]
 
     subcat = cat["stac-catalog-eo"]
     @show subcat
