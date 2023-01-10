@@ -29,40 +29,38 @@ end
     @test keys(cat) == ["stac-catalog-eo"]
 
     subcat = cat["stac-catalog-eo"]
-    @show subcat
-    @show keys(subcat)
+    @test subcat isa STAC.Catalog
+    @test keys(subcat) isa AbstractVector{<:String}
 
     subcat1 = subcat["landsat-8-l1"]
 
-
-    @show subcat1
-
+    @test subcat1 isa STAC.Catalog
 
     item = subcat1.items["LC08_L1TP_152038_20200611_20200611_01_RT"]
-
     testshow(item,"box")
 
-    bbox(item)
-    geometry(item)
-    links(item)
-    properties(item)
+    @test bbox(item) isa AbstractVector
+    @test links(item) isa AbstractVector
+    @test properties(item) isa AbstractDict
 
     assetB4 = item.assets["B4"]
-    @show href(assetB4)
+    @test href(assetB4) isa AbstractString
 
     testshow(assetB4,"type")
 
 
     STAC.set_cache_max_size(10000)
 
-    for c in eachcatalog(cat)
-        @show id(c)
-    end
+    @test length(collect(eachcatalog(cat))) > 0
 
+    @test length(collect(eachitem(cat))) > 0
+
+    #=
     for item in eachitem(cat)
         @show id(item)
         @test length(bbox(item)) == 4
     end
+    =#
 
     STAC.set_title_color(:light_red)
     @test STAC.title_color[] == :light_red
