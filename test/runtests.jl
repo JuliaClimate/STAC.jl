@@ -48,7 +48,6 @@ end
 
     testshow(assetB4,"type")
 
-
     STAC.set_cache_max_size(10000)
 
     @test length(collect(eachcatalog(cat))) > 0

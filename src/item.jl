@@ -71,3 +71,8 @@ $(west)                $(east)
     _printstyled(io, "date time: ",DateTime(item),"\n")
     _show_assets(io,item)
 end
+
+
+Base.keys(item::Item) = keys(item.assets)
+Base.values(item::Item) = values(item.assets)
+Base.getindex(item::Item,name) = item.assets[name]

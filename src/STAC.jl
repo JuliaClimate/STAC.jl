@@ -1,6 +1,6 @@
 module STAC
 
-import Base: keys, getindex, show, length, iterate
+import Base: keys, values, getindex, show, length, iterate
 import CFTime
 import Dates: DateTime
 import Dates
