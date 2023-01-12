@@ -20,7 +20,7 @@ Inside a Julia terminal, you can download and install `STAC` issuing these comma
 
 ```julia
 using Pkg
-Pkg.add(url="https://github.com/JuliaClimate/STAC.jl")
+Pkg.add("STAC")
 ```
 
 ## Example
