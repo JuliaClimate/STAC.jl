@@ -77,7 +77,7 @@ end
 
 
 @testset "search" begin
-    collections = "landsat-8-c2-l2"
+    collections = ["landsat-8-c2-l2"]
     time_range = (DateTime(2018,01,01), DateTime(2018,01,02))
     lon_range = (2.51357303225, 6.15665815596)
     lat_range = (49.5294835476, 51.4750237087)
@@ -85,4 +85,56 @@ end
 
     search_results = collect(search(cat, collections, lon_range, lat_range, time_range))
     @test length(search_results) == 2
+
+
+    search_results = collect(search(cat, collections[1], lon_range, lat_range, time_range))
+    @test length(search_results) == 2
+
+    # test STACQL
+
+    query = Dict("eo:cloud_cover" =>  Dict("lt" => 61))
+    search_results = collect(
+        search(cat, collections,
+               lon_range, lat_range, time_range,
+               query = query,
+               ))
+    @test length(search_results) == 1
+
+    # test CQL2
+
+    filter = Dict(
+        "op" => "<=",
+        "args" => [Dict( "property" => "eo:cloud_cover" ), 61]
+    )
+
+    search_results = collect(
+        search(cat, collections,
+               lon_range, lat_range, time_range,
+               filter = filter,
+               )
+    )
+    @test length(search_results) == 1
+
+
+    filter = Dict(
+        "op" => "and",
+        "args" => [
+            Dict(
+                "op" => "<=",
+                "args" => [Dict("property" => "eo:cloud_cover"), 61]
+            ),
+            Dict(
+                "op" => "=",
+                "args" => [Dict("property" => "platform"), "landsat-8"]
+            ),
+        ]
+    )
+
+    search_results = collect(
+        search(cat, collections,
+               lon_range, lat_range, time_range,
+               filter = filter,
+               )
+    )
+    @test length(search_results) == 1
 end
