@@ -14,6 +14,8 @@ end
 
     cat = STAC.Catalog(url)
 
+    testshow(cat,"STAC")
+
     @test id(cat) == "stac-catalog"
     @test occursin("1.",stac_version(cat))
     @test stac_extensions(cat) == nothing
@@ -35,16 +37,24 @@ end
     subcat1 = subcat["landsat-8-l1"]
 
     @test subcat1 isa STAC.Catalog
+    testshow(subcat1,"Items")
 
     item = subcat1.items["LC08_L1TP_152038_20200611_20200611_01_RT"]
     testshow(item,"box")
 
+    @test geometry(item) isa STAC.GeoJSON.Polygon
     @test bbox(item) isa AbstractVector
     @test links(item) isa AbstractVector
     @test properties(item) isa AbstractDict
 
     assetB4 = item.assets["B4"]
     @test href(assetB4) isa AbstractString
+
+    assetB4 = item["B4"]
+    @test href(assetB4) isa AbstractString
+
+    @test keys(item) == keys(item.assets)
+    @test values(item) == values(item.assets)
 
     testshow(assetB4,"type")
 
