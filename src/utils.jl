@@ -69,7 +69,8 @@ for (item_color,default) in (
         """
         STAC.set_$($item_color_str)(color::Symbol)
 
-Set the $($item_str) color. The default color is `Base.$($default_str)()`.
+Set the $($item_str) color. The default color is `Base.$($default_str)()`. The
+color is saved using [Preferences.jl](https://github.com/JuliaPackaging/Preferences.jl).
 """
         function $(Symbol(:set_,item_color))(color::Symbol)
             @set_preferences!($(item_color_str) => String(color))
