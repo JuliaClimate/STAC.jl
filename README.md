@@ -60,23 +60,33 @@ Retrieve a list of OPeNDAP URLs from the NASA [Common Metadata Repository (CMR)]
 
 
 ```julia
-using STAC, URIs, Dates
+using STAC, Dates, Downloads
 
 token = "put_your_user_token_here"
-timerange = (DateTime(2019,1,1),DateTime(2019,12,31))
+timerange = (DateTime(2005,1,1),DateTime(2005,1,31))
 collection_concept_id = "C1996881146-POCLOUD"
 baseurl = "https://cmr.earthdata.nasa.gov/search/granules.stac"
 
-url = string(URI(URI(baseurl), query = Dict(
-    "collection_concept_id" => collection_concept_id,
+query = Dict(
     "temporal" => join(string.(timerange),','),
     "pageSize" => 1000, # default is 100
-    "token" => token)))
+    )
 
-collection = STAC.FeatureCollection(url)
-opendap_url = [href(item.assets["opendap"]) for item in collection]
+url=baseurl*"?collection_concept_id=$(collection_concept_id)&temporal="*query["temporal"]
 
-@show length(opendap_url)
+collection = STAC.FeatureCollection(url,Dict())
+
+#the following commands may require authentification
+
+item=take!(collection)
+Downloads.download(href(item.assets["data"]))
+
+#the following commands need more fixing it seems
+
+#collection = STAC.FeatureCollection(url,query)
+#opendap_url = [href(item.assets["opendap"]) for item in collection]
+
+#@show length(opendap_url)
 # output 365, one URL per day
 ```
 

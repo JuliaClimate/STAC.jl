@@ -4,7 +4,12 @@ function FeatureCollection(url,query)
     ch = Channel{STAC.Item}() do c
         while true
             @debug "post $url" query
-            r = HTTP.post(url,[],JSON3.write(query))
+            if !isempty(query)
+                r = HTTP.post(url,[],JSON3.write(query))
+            else
+                r = HTTP.post(url)
+                #r=HTTP.get(url)
+        end
             data = JSON3.read(String(r.body))
             for d in data[:features]
                 put!(c,STAC.Item("",d,STAC._assets(d)))
@@ -16,7 +21,9 @@ function FeatureCollection(url,query)
             if length(next) == 0
                 break
             else
-                url = next[1][:href]
+				a=next[1][:body][:collection_concept_id]
+				b=next[1][:body][:page_num]
+				url = next[1][:href]*"?collection_concept_id=$(a)&page_num=$(b)"
             end
         end
     end
