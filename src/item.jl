@@ -30,8 +30,9 @@ Get the date time of STAC `item` as a `Dates.DateTime` (or `nothing`
 if this properties is not specified).
 """
 function DateTime(item::Item)
-    if haskey(item.data.properties,:datetime)
-        dt = item.data.properties[:datetime]
+    dt = get(item.data.properties,:datetime,nothing)
+
+    if !isnothing(dt)
         return CFTime.parseDT(Dates.DateTime,dt)
     else
         return nothing
@@ -55,16 +56,22 @@ end
 
 
 function Base.show(io::IO,item::Item)
-    fmt(x) = @sprintf("%0.6f",x)
-    west, south, east, north = fmt.(bbox(item))
+    fmt(x) = @sprintf("%9.5f",x)
+
+    bb = bbox(item);
+    if isnothing(bb)
+        west = south = east = north = "    ?    "
+    else
+        west, south, east, north = fmt.(bb)
+    end
     printstyled(io, id(item), "\n", bold=true, color=title_color[])
     printstyled(io, "bounding box:\n")
     print(io,"""
-     ┌──────$(north )───────┐
-     │                      │
-$(west)                $(east)
-     │                      │
-     └──────$(south )───────┘
+    ┌──────$(north )───────┐
+    │                      │
+$(west)              $(east)
+    │                      │
+    └──────$(south )───────┘
 
 """)
 
