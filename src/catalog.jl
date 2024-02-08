@@ -11,6 +11,9 @@ function Base.show(io::IO,cat::Catalog)
     printstyled(io, id(cat), "\n", bold=true, color=title_color[])
     _printstyled(io, title(cat), "\n")
     _printstyled(io, description(cat), "\n")
+    _printstyled(io, "License: ",license(cat), "\n")
+    _printstyled(io, "DOI: ",doi(cat), "\n")
+
 
     ident = "  "
     if length(cat.children) > 0
@@ -59,6 +62,12 @@ Get the $($name) of a STAC catalog (or `default` if it is not specified).
 end
 
 
+"""
+    data = doi(cat::Catalog; default = nothing)
+
+Get the doi of a STAC catalog (or `default` if it is not specified).
+"""
+doi(cat::Catalog; default=nothing) = get(cat.data,"sci:doi",default)
 
 function _getindex_guess(listc,fun,id)
     for item in listc

@@ -10,7 +10,6 @@ end
 
 Base.length(ld::LazyOrderedDict) = length(ld.list)
 
-
 function load!(ld::LazyOrderedDict)
     if ld.data == nothing
         ld.data = OrderedDict(ld.fun.(ld.list)...)
