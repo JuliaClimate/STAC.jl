@@ -129,10 +129,8 @@ end
 
 function _subcat(T,child,url)
     cc = child[:href]
-
-    c = URI(url)
-    cc = string(absuri(URI(path=joinpath(dirname(c.path),URI(cc).path)),c))
-    return T(cc)
+    c_url = string(URIs.resolvereference(url, cc))
+    return T(c_url)
 end
 
 """
