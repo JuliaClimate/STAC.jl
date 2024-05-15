@@ -1,10 +1,35 @@
 
+function FeatureCollection(url,query; method=:get, _enctype = :form_urlencoded)
+    next_request =
+        if method == :get
+            Dict(
+                :method => "GET",
+                :href => string(URI(URI(url), query = query)))
+        else
+            Dict(
+                :method => "POST",
+                :href => url,
+                :body => query
+            )
+        end
 
-function FeatureCollection(url,query)
     ch = Channel{STAC.Item}() do c
         while true
-            @debug "post $url" query
-            r = HTTP.post(url,[],JSON3.write(query))
+            url = next_request[:href]
+            if next_request[:method] == "POST"
+                @debug "post $url" query
+                 if _enctype == :form_urlencoded
+                     r = HTTP.post(url,[],body=next_request[:body])
+                 elseif _enctype == :json
+                     b = JSON3.write(next_request[:body])
+                     r = HTTP.post(url,[],b)
+                 else
+                     error("unknown encoding for POST $_enctype")
+                 end
+            else
+                @debug "get $url"
+                r = HTTP.get(url)
+            end
             data = JSON3.read(String(r.body))
             for d in data[:features]
                 put!(c,STAC.Item("",d,STAC._assets(d)))
@@ -12,15 +37,21 @@ function FeatureCollection(url,query)
 
             # check if there is a next page
             next = filter(d -> get(d,"rel",nothing) == "next",data[:links])
-            # no more next page
+
             if length(next) == 0
+                # no more next page
                 break
             else
-                url = next[1][:href]
+                next_request = next[1]
+                @debug "next " next_request
             end
         end
     end
 end
+
+format_datetime(x::Union{Dates.Date,Dates.DateTime}) = Dates.format(x,Dates.dateformat"yyyy-mm-ddTHH:MM:SS.sssZ")
+format_datetime(x::Union{AbstractVector,Tuple}) = join(format_datetime.(x),"/")
+format_bbox(bbox) = join(string.(bbox),',')
 
 
 """
@@ -75,15 +106,13 @@ search_results = collect(
 ))
 ```
 
-
+Currently only POST search requests are supported.
 """
 function search(cat::Catalog, collections, lon_range, lat_range, time_range;
                 query = nothing,
                 filter = nothing,
                 extra_query = nothing,
                 limit = 200)
-    format_datetime(x::Union{Dates.Date,Dates.DateTime}) = Dates.format(x,Dates.dateformat"yyyy-mm-ddTHH:MM:SS.sssZ")
-    format_datetime(x::Union{AbstractVector,Tuple}) = join(format_datetime.(x),"/")
 
     if collections isa AbstractString
         collections = [collections]
@@ -91,6 +120,9 @@ function search(cat::Catalog, collections, lon_range, lat_range, time_range;
 
     west, east = lon_range
     south, north = lat_range
+
+    # for POST request in JSON format
+    # e.g. do not join bbox elements as a string
 
     full_query = Dict(
         "collections" => collections,
@@ -113,7 +145,11 @@ function search(cat::Catalog, collections, lon_range, lat_range, time_range;
     end
 
     @debug "full query:" full_query
-    return FeatureCollection(cat.url * "/search",full_query)
+    return FeatureCollection(
+        cat.url * "/search",full_query,
+        method = :post,
+        _enctype = :json
+    )
 end
 
 export search

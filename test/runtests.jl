@@ -148,3 +148,7 @@ end
     )
     @test length(search_results) == 1
 end
+
+@testset "providers" begin
+    include("test_earth_data.jl")
+end
