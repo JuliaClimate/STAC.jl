@@ -50,6 +50,34 @@ function Base.iterate(ld::LazyOrderedDict, state = copy(ld.list))
 end
 
 
+struct OrderedDictWrapper{Tdata,Tgetindex,Tkeys} <: AbstractDict{String,Any}
+    data::Tdata
+    keys::Tkeys
+    getindex::Tgetindex
+end
+
+Base.keys(odw::OrderedDictWrapper) = odw.keys(odw.data)
+Base.getindex(odw::OrderedDictWrapper,key) = odw.getindex(odw.data,key)
+
+
+Base.length(odw::OrderedDictWrapper) = length(collect(keys(odw)))
+
+function Base.iterate(odw::OrderedDictWrapper, state = collect(keys(odw)))
+    if length(state) == 0
+        return nothing
+    end
+
+    return (state[1] => odw[popfirst!(state)], state)
+end
+
+function Base.get(odw::OrderedDictWrapper, name::String, default)
+    if haskey(odw,name)
+        return odw[name]
+    else
+        return default
+    end
+end
+
 
 for (item_color,default) in (
     (:title_color, :error_color),

@@ -19,5 +19,7 @@ include("asset.jl")
 include("item.jl")
 include("catalog.jl")
 include("search.jl")
+include("conformance.jl")
+include("link.jl")
 
 end
