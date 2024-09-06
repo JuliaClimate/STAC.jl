@@ -32,7 +32,7 @@ function FeatureCollection(url,query; method=:get, _enctype = :form_urlencoded)
             end
             data = JSON3.read(String(r.body))
             for d in data[:features]
-                put!(c,STAC.Item("",d,STAC._assets(d)))
+                put!(c,STAC.Item("",d,STAC._assets(d),nothing))
             end
 
             # check if there is a next page

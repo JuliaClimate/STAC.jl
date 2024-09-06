@@ -2,7 +2,6 @@ struct Catalog
     url::String
     data
     parent
-    items
     assets
 end
 
@@ -107,76 +106,77 @@ item = subcat1.items["LC08_L1TP_152038_20200611_20200611_01_RT"]
 """
 function Catalog(url::String; parent = nothing)
     data = cached_resolve(url)
-
-    links = filter(l -> l.rel == "items",data.links)
-    conforms_to = get(data,:conformsTo,String[])
-
-    if conforms(conforms_to,CONFORMANCE.item_search) && (length(links) > 0)
-        url = first(links).href
-        query = Dict()
-        items = OrderedDict((i.data.id,i) for i in STAC.FeatureCollection(url,query))
-    else
-        listi = filter(l -> l[:rel] == "item",data[:links])
-        items = LazyOrderedDict{String,Item}(nothing,listi,nothing) do link
-            subcat = _subcat(Item,link,url)
-            id(subcat) => subcat
-        end
-    end
-
-
     assets = _assets(data)
 
-    return Catalog(url,data,parent,items,assets)
+    return Catalog(url,data,parent,assets)
 end
 
-function _each_direct_child(catalog::Catalog)
-    data = catalog.data
-    listc = filter(l -> l[:rel] == "child",data[:links])
+function root(catalog::Catalog)
+    if isnothing(catalog.parent)
+        return catalog
+    else
+        return root(catalog.parent)
+    end
+end
 
-    Channel{Catalog}() do c
+function _each_direct_rel(T,catalog::Catalog,rel)
+    data = catalog.data
+    listc = filter(l -> l[:rel] == String(rel),data[:links])
+
+    items_links = filter(l -> l[:rel] == "items",data[:links])
+
+    if ((rel == :item) &&
+        conforms(root(catalog),CONFORMANCE.item_search) &&
+        (length(items_links) > 0))
+
+        url = first(items_links).href
+        query = Dict()
+        return STAC.FeatureCollection(url,query)
+    end
+
+    Channel{T}() do c
         for child in listc
             cc = child[:href]
             c_url = string(URIs.resolvereference(catalog.url, cc))
-            subcat = Catalog(c_url,parent = catalog)
-            put!(c,subcat)
+            put!(c,T(c_url,parent = catalog))
         end
     end
 end
 
-function _each_direct_item(catalog::Catalog)
-    data = catalog.data
-    listc = filter(l -> l[:rel] == "child",data[:links])
+_each_direct_child(catalog::Catalog) =
+    _each_direct_rel(Catalog,catalog,:child)
 
-    Channel{Catalog}() do c
-        for child in listc
-            cc = child[:href]
-            c_url = string(URIs.resolvereference(catalog.url, cc))
-            subcat = Catalog(c_url,parent = catalog)
-            put!(c,subcat)
-        end
-    end
-end
+_each_direct_item(catalog::Catalog) =
+    _each_direct_rel(Item,catalog,:item)
 
-function children_ids(catalog::Catalog)
+function _rel_ids(T,catalog::Catalog,rel)
     Channel{String}() do c
-        for child in _each_direct_child(catalog)
+        for child in _each_direct_rel(T,catalog,rel)
             put!(c,id(child))
         end
     end
 end
 
-function child(catalog::Catalog,child_id::AbstractString)
-    for child in _each_direct_child(catalog)
-        if id(child) == child_id
+function _rel(T,catalog::Catalog,rel,rel_id)
+    for child in _each_direct_rel(T,catalog,rel)
+        if id(child) == rel_id
             return child
         end
     end
+    error("no $rel with the id '$rel_id' found")
 end
 
+children_ids(catalog::Catalog) = _rel_ids(Catalog,catalog,:child)
+child(catalog::Catalog,id::AbstractString) = _rel(Catalog,catalog,:child,id)
+
+items_ids(catalog::Catalog) = _rel_ids(Item,catalog,:item)
+item(catalog::Catalog,id::AbstractString) = _rel(Item,catalog,:item,id)
 
 @inline function Base.getproperty(catalog::Catalog,name::Symbol)
     if (name == :children)
         return OrderedDictWrapper(catalog,children_ids,child)
+    elseif (name == :items)
+        return OrderedDictWrapper(catalog,items_ids,item)
     else
         return getfield(catalog,name)
     end

@@ -41,18 +41,15 @@ function match(class::STACConformanceClass,c::AbstractString)
     return compatible(class.version,VersionNumber(v))
 end
 
-function conforms(conforms_to::AbstractVector{<:AbstractString},class::AbstractConformanceClass)
+function conforms(catalog::STAC.Catalog,class::AbstractConformanceClass)
+    conforms_to = get(catalog.data,:conformsTo,String[])
+
     for c in conforms_to
         if match(class,c)
             return true
         end
     end
     return false
-
-end
-
-function conforms(catalog::STAC.Catalog,class::AbstractConformanceClass)
-    return conforms(catalog.data.conformsTo,class)
 end
 
 const CONFORMANCE = (

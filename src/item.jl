@@ -3,6 +3,7 @@ struct Item
     url::String
     data
     assets
+    parent
 end
 
 # https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md
@@ -48,10 +49,10 @@ Get the geometry of STAC `item` as a GeoJSON object
 geometry(item::Item) = GeoJSON.geometry(item.data[:geometry])
 export geometry
 
-function Item(url)
+function Item(url; parent = nothing)
     data = cached_resolve(url)
     assets = _assets(data)
-    return Item(url,data,assets)
+    return Item(url,data,assets,parent)
 end
 
 
