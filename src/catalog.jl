@@ -119,6 +119,12 @@ function root(catalog::Catalog)
     end
 end
 
+function _from_link(T,catalog,link)
+    cc = link[:href]
+    c_url = string(URIs.resolvereference(catalog.url, cc))
+    return T(c_url,parent = catalog)
+end
+
 function _each_direct_rel(T,catalog::Catalog,rel)
     data = catalog.data
     listc = filter(l -> l[:rel] == String(rel),data[:links])
@@ -136,9 +142,7 @@ function _each_direct_rel(T,catalog::Catalog,rel)
 
     Channel{T}() do c
         for child in listc
-            cc = child[:href]
-            c_url = string(URIs.resolvereference(catalog.url, cc))
-            put!(c,T(c_url,parent = catalog))
+            put!(c,_from_link(T,catalog,child))
         end
     end
 end
@@ -158,6 +162,25 @@ function _rel_ids(T,catalog::Catalog,rel)
 end
 
 function _rel(T,catalog::Catalog,rel,rel_id)
+    data = catalog.data
+    # listc = filter(l -> l[:rel] == String(rel),data[:links])
+
+    # # try to guess the link
+    # # but check if it is correct
+    # for link in listc
+    #     probable_id = split(link.href,"/")[end]
+    #     if rel_id == probable_id
+    #         rel = _from_link(T,catalog,link)
+    #         @show probable_id
+    #         if id(rel) == rel_id
+    #             @debug "found $rel_id"
+    #             @show "found $rel_id"
+    #             return rel
+    #         end
+    #     end
+    # end
+
+    # slow path
     for child in _each_direct_rel(T,catalog,rel)
         if id(child) == rel_id
             return child
@@ -180,12 +203,6 @@ item(catalog::Catalog,id::AbstractString) = _rel(Item,catalog,:item,id)
     else
         return getfield(catalog,name)
     end
-end
-
-function _subcat(T,child,url)
-    cc = child[:href]
-    c_url = string(URIs.resolvereference(url, cc))
-    return T(c_url)
 end
 
 """
