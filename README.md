@@ -16,7 +16,7 @@ Opening an issue to notify about a missing feature is not helpful for the momeme
 ## Installation
 
 You need [Julia](https://julialang.org/downloads) (version 1.6 or later).
-Inside a Julia terminal, you can download and install `STAC` issuing these commands:
+Inside a Julia terminal, you can download and install `STAC` issuing these Julia commands:
 
 ```julia
 using Pkg
