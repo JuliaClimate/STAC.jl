@@ -14,21 +14,27 @@ function Base.show(io::IO,cat::Catalog)
 
 
     ident = "  "
-    if length(cat.children) > 0
-        println(io,"Children:")
-        for (id,child) in cat.children
-            print(io,ident," * ")
-            printstyled(io, id, color=catalog_color[])
-            printstyled(io, ": ",title(cat[id]), "\n")
+    first_iteration = true
+    for (id,child) in cat.children
+        if first_iteration
+            println(io,"Children:")
+            first_iteration = false
         end
+
+        print(io,ident," * ")
+        printstyled(io, id, color=catalog_color[])
+        printstyled(io, ": ",title(cat[id]), "\n")
     end
 
-   if length(cat.items) > 0
-        println(io,"Items:")
-        for (id,item) in cat.items
-            print(io,ident," * ")
-            printstyled(io, id, "\n", color=item_color[])
+    first_iteration = true
+    for (id,item) in cat.items
+        if first_iteration
+            println(io,"Items:")
+            first_iteration = false
         end
+
+        print(io,ident," * ")
+        printstyled(io, id, "\n", color=item_color[])
     end
 
     _show_assets(io,cat)

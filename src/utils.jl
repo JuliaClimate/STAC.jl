@@ -63,14 +63,22 @@ Base.getindex(odw::OrderedDictWrapper,key) = odw.getindex(odw.data,key)
 
 Base.length(odw::OrderedDictWrapper) = length(collect(keys(odw)))
 
+# https://github.com/JuliaLang/julia/blob/95c643a689293eb91a47cc83c41533a94c3677cc/base/channels.jl
 function Base.iterate(odw::OrderedDictWrapper, channel = odw.make_channel(odw.data))
-    if isempty(channel)
+    if isopen(channel) || isready(channel)
+        try
+            element = take!(channel)
+            return (id(element) => element,channel)
+        catch e
+            if isa(e, InvalidStateException) && e.state === :closed
+                return nothing
+            else
+                rethrow()
+            end
+        end
+    else
         return nothing
     end
-
-    element = first(channel)
-
-    return (id(element) => element,channel)
 end
 
 function Base.get(odw::OrderedDictWrapper, name::String, default)
