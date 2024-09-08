@@ -31,6 +31,7 @@ function FeatureCollection(url,query; method=:get, _enctype = :form_urlencoded)
                 r = HTTP.get(url)
             end
             data = JSON3.read(String(r.body))
+
             for d in data[:features]
                 put!(c,STAC.Item("",d,STAC._assets(d),nothing))
             end

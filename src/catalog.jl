@@ -23,7 +23,7 @@ function Base.show(io::IO,cat::Catalog)
         end
     end
 
-    if length(cat.items) > 0
+   if length(cat.items) > 0
         println(io,"Items:")
         for (id,item) in cat.items
             print(io,ident," * ")
@@ -126,6 +126,7 @@ function _from_link(T,catalog,link)
 end
 
 function _each_direct_rel(T,catalog::Catalog,rel)
+    limit = 100
     data = catalog.data
     listc = filter(l -> l[:rel] == String(rel),data[:links])
 
@@ -136,7 +137,9 @@ function _each_direct_rel(T,catalog::Catalog,rel)
         (length(items_links) > 0))
 
         url = first(items_links).href
-        query = Dict()
+        query = Dict(
+            "limit" => limit,
+        )
         return STAC.FeatureCollection(url,query)
     end
 
@@ -197,9 +200,9 @@ item(catalog::Catalog,id::AbstractString) = _rel(Item,catalog,:item,id)
 
 @inline function Base.getproperty(catalog::Catalog,name::Symbol)
     if (name == :children)
-        return OrderedDictWrapper(catalog,children_ids,child)
+        return OrderedDictWrapper(catalog,children_ids,child,_each_direct_child)
     elseif (name == :items)
-        return OrderedDictWrapper(catalog,items_ids,item)
+        return OrderedDictWrapper(catalog,items_ids,item,_each_direct_item)
     else
         return getfield(catalog,name)
     end

@@ -54,6 +54,7 @@ struct OrderedDictWrapper{Tdata,Tgetindex,Tkeys} <: AbstractDict{String,Any}
     data::Tdata
     keys::Tkeys
     getindex::Tgetindex
+    channel
 end
 
 Base.keys(odw::OrderedDictWrapper) = odw.keys(odw.data)
