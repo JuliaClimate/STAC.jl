@@ -54,7 +54,7 @@ struct OrderedDictWrapper{Tdata,Tgetindex,Tkeys} <: AbstractDict{String,Any}
     data::Tdata
     keys::Tkeys
     getindex::Tgetindex
-    channel
+    make_channel
 end
 
 Base.keys(odw::OrderedDictWrapper) = odw.keys(odw.data)
@@ -63,12 +63,14 @@ Base.getindex(odw::OrderedDictWrapper,key) = odw.getindex(odw.data,key)
 
 Base.length(odw::OrderedDictWrapper) = length(collect(keys(odw)))
 
-function Base.iterate(odw::OrderedDictWrapper, state = collect(keys(odw)))
-    if length(state) == 0
+function Base.iterate(odw::OrderedDictWrapper, channel = odw.make_channel(odw.data))
+    if isempty(channel)
         return nothing
     end
 
-    return (state[1] => odw[popfirst!(state)], state)
+    element = first(channel)
+
+    return (id(element) => element,channel)
 end
 
 function Base.get(odw::OrderedDictWrapper, name::String, default)
