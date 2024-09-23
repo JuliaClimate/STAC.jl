@@ -2,6 +2,7 @@
 struct Item
     url::String
     data
+    geojson
     assets
     parent
 end
@@ -46,14 +47,15 @@ export DateTime
 
 Get the geometry of STAC `item` as a GeoJSON object
 """
-geometry(item::Item) = GeoJSON.geometry(GeoJSON.read(JSON3.write(item.data)))
+geometry(item::Item) = GeoJSON.geometry(item.geojson)
 
 export geometry
 
 function Item(url; parent = nothing)
     data = cached_resolve(url)
+    geojson = GeoJSON.read(JSON3.write(data))
     assets = _assets(data)
-    return Item(url,data,assets,parent)
+    return Item(url,data,geojson,assets,parent)
 end
 
 
