@@ -4,6 +4,8 @@ import Base: keys, values, getindex, show, length, iterate
 import CFTime
 import Dates: DateTime
 import Dates
+import GeoJSON: geometry
+
 using DataStructures
 using GeoJSON
 using HTTP

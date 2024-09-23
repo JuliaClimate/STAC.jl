@@ -47,12 +47,13 @@ export DateTime
 
 Get the geometry of STAC `item` as a GeoJSON object
 """
-geometry(item::Item) = GeoJSON.geometry(item.geojson)
+geometry(item::Item) = geometry(item.geojson)
 
 export geometry
 
 function Item(url; parent = nothing)
     data = cached_resolve(url)
+    # is there a better way?
     geojson = GeoJSON.read(JSON3.write(data))
     assets = _assets(data)
     return Item(url,data,geojson,assets,parent)
