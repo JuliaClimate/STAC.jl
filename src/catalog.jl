@@ -112,6 +112,11 @@ item = subcat1.items["LC08_L1TP_152038_20200611_20200611_01_RT"]
 """
 function Catalog(url::String; parent = nothing)
     data = cached_resolve(url)
+
+    if !haskey(data,:id)
+        throw(ArgumentError("The mandatory STAC id element is missing in $url"))
+    end
+
     assets = _assets(data)
 
     return Catalog(url,data,parent,assets)
