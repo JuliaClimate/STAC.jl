@@ -59,7 +59,7 @@ format_bbox(bbox) = join(string.(bbox),',')
 
 """
     search(cat::Catalog, collections, lon_range, lat_range, datetime;
-           limit = 200,
+           limit = 100,
            filter = nothing,
            query = nothing,
     )
@@ -115,7 +115,7 @@ function search(cat::Catalog, collections, lon_range, lat_range, time_range;
                 query = nothing,
                 filter = nothing,
                 extra_query = nothing,
-                limit = 200)
+                limit = cat.limit)
 
     if collections isa AbstractString
         collections = [collections]

@@ -3,6 +3,7 @@ struct Catalog
     data
     parent
     assets
+    limit::Int
 end
 
 function Base.show(io::IO,cat::Catalog)
@@ -89,11 +90,12 @@ function _getindex_guess(listc,fun,id)
 end
 
 """
-    cat = STAC.Catalog(url)
+    cat = STAC.Catalog(url; limit = 100)
 
 Open a SpatioTemporal Asset Catalog (STAC) using the provided `url`.
 The `url` should point to a JSON object conforming to the
-[STAC specification](https://stacspec.org/).
+[STAC specification](https://stacspec.org/). `limit` indicates default number of
+items to be return in a single search request.
 
 `cat` behaves as a julia dictionary with all STAC subcatalogs. `cat.items` is a
 dictionary with all STAC items.
@@ -110,7 +112,7 @@ item = subcat1.items["LC08_L1TP_152038_20200611_20200611_01_RT"]
 @show href(item.assets["B4"])
 ```
 """
-function Catalog(url::String; parent = nothing)
+function Catalog(url::String; parent = nothing, limit = 200)
     data = cached_resolve(url)
 
     if !haskey(data,:id)
@@ -119,7 +121,7 @@ function Catalog(url::String; parent = nothing)
 
     assets = _assets(data)
 
-    return Catalog(url,data,parent,assets)
+    return Catalog(url,data,parent,assets,limit)
 end
 
 function root(catalog::Catalog)
@@ -137,7 +139,7 @@ function _from_link(T,catalog,link)
 end
 
 function _each_direct_rel(T,catalog::Catalog,rel)
-    limit = 100
+    limit = catalog.limit
     data = catalog.data
     listc = filter(l -> l[:rel] == String(rel),data[:links])
 
