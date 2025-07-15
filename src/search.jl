@@ -16,16 +16,17 @@ function FeatureCollection(url,query; method=:get, _enctype = :form_urlencoded)
     ch = Channel{STAC.Item}() do c
         while true
             url = next_request[:href]
-            if next_request[:method] == "POST"
+
+            if get(next_request,:method,"GET") == "POST"
                 @debug "post $url" query
-                 if _enctype == :form_urlencoded
-                     r = HTTP.post(url,[],body=next_request[:body])
-                 elseif _enctype == :json
-                     b = JSON3.write(next_request[:body])
-                     r = HTTP.post(url,[],b)
-                 else
-                     error("unknown encoding for POST $_enctype")
-                 end
+                if _enctype == :form_urlencoded
+                    r = HTTP.post(url,[],body=next_request[:body])
+                elseif _enctype == :json
+                    b = JSON3.write(next_request[:body])
+                    r = HTTP.post(url,[],b)
+                else
+                    error("unknown encoding for POST $_enctype")
+                end
             else
                 @debug "get $url"
                 r = HTTP.get(url)
