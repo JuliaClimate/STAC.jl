@@ -59,7 +59,20 @@ end
 
 Base.keys(odw::OrderedDictWrapper) = odw.keys(odw.data)
 Base.getindex(odw::OrderedDictWrapper,key) = odw.getindex(odw.data,key)
-Base.getindex(odw::OrderedDictWrapper, key::Integer) = odw.getindex(odw.data, keys(odw)[key])
+function Base.getindex(odw::OrderedDictWrapper, intkey::Integer)
+    odwkeys = keys(odw)
+    outkey = eltype(odwkeys)[]
+    for (i, key) in enumerate(odwkeys)
+        if i == intkey
+            push!(outkey, key)
+            break
+        end
+    end
+    if isempty(outkey)
+        throw(BoundsError(odw, intkey))
+    end
+    odw.getindex(odw.data, outkey[1])
+end
 
 function Base.show(io::IO, m::MIME"text/plain", odw::OrderedDictWrapper)
     _printstyled(io, typeof(odw),"\n")
