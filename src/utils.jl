@@ -22,9 +22,9 @@ function Base.keys(ld::LazyOrderedDict)
 end
 
 function Base.getindex(ld::LazyOrderedDict{K,V},id::K) where {K,V}
-    if ld.getindex_guess != nothing
+    if ld.getindex_guess !== nothing
         guess = ld.getindex_guess(ld.list,ld.fun,id)
-        if guess != nothing
+        if guess !== nothing
             return guess
         end
     end
@@ -59,8 +59,15 @@ end
 
 Base.keys(odw::OrderedDictWrapper) = odw.keys(odw.data)
 Base.getindex(odw::OrderedDictWrapper,key) = odw.getindex(odw.data,key)
+Base.getindex(odw::OrderedDictWrapper, key::Integer) = odw.getindex(odw.data, keys(odw)[key])
 
+function Base.show(io::IO, m::MIME"text/plain", odw::OrderedDictWrapper)
+    _printstyled(io, typeof(odw),"\n")
+    _printstyled(io, odwtype(odw.getindex))
+    _printstyled(io, "Parent Catalog: ", title(odw.data))
+end
 
+odwtype(x) = string(x) * " of "
 Base.length(odw::OrderedDictWrapper) = length(collect(keys(odw)))
 
 # https://github.com/JuliaLang/julia/blob/95c643a689293eb91a47cc83c41533a94c3677cc/base/channels.jl

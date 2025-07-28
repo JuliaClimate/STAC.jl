@@ -207,9 +207,12 @@ end
 
 children_ids(catalog::Catalog) = _rel_ids(Catalog,catalog,:child)
 child(catalog::Catalog,id::AbstractString) = _rel(Catalog,catalog,:child,id)
+odwtype(::typeof(STAC.child)) = "Children of "
 
 items_ids(catalog::Catalog) = _rel_ids(Item,catalog,:item)
 item(catalog::Catalog,id::AbstractString) = _rel(Item,catalog,:item,id)
+odwtype(::typeof(STAC.item)) = "Items of "
+
 
 @inline function Base.getproperty(catalog::Catalog,name::Symbol)
     if (name == :children)
