@@ -31,9 +31,7 @@ function FeatureCollection(url,query; method=:get, _enctype = :form_urlencoded)
                 @debug "get $url"
                 r = HTTP.get(url)
             end
-            @show r
             data = JSON3.read(String(r.body))
-            @show keys(data)
             for d in data[:features]
                 geojson = GeoJSON.read(JSON3.write(d))
                 put!(c,STAC.Item("",d,geojson,STAC._assets(d),nothing))
