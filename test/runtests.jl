@@ -38,9 +38,14 @@ end
 
     @test subcat1 isa STAC.Catalog
     testshow(subcat1,"Items")
+    subitems = subcat1.items
+    testshow(subitems, "Parent Catalog")
 
     item = subcat1.items["LC08_L1TP_152038_20200611_20200611_01_RT"]
+    itemint = subcat1.items[1]
+    @test item == itemint
     testshow(item,"box")
+    testshow(item, "LC08_L1TP_152038_20200611_20200611_01_RT")
 
     @test geometry(item) isa STAC.GeoJSON.Polygon
     @test bbox(item) isa AbstractVector
