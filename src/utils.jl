@@ -80,6 +80,7 @@ function Base.show(io::IO, m::MIME"text/plain", odw::OrderedDictWrapper)
     _printstyled(io, "Parent Catalog: ", title(odw.data))
 end
 
+Base.show(io::IO, odw::OrderedDictWrapper) = show(io, MIME("text/plain"), odw) 
 odwtype(x) = string(x) * " of "
 Base.length(odw::OrderedDictWrapper) = length(collect(keys(odw)))
 

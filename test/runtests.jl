@@ -44,6 +44,7 @@ end
     item = subcat1.items["LC08_L1TP_152038_20200611_20200611_01_RT"]
     itemint = subcat1.items[1]
     @test item == itemint
+    @test_throws BoundsError subcat1.items[2]
     testshow(item,"box")
     testshow(item, "LC08_L1TP_152038_20200611_20200611_01_RT")
 
