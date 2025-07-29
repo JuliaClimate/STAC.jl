@@ -17,6 +17,8 @@ Get the $($name) of a STAC `asset` (or `default` if it is not specified).
     end
 end
 
+(==)(a1::Asset, a2::Asset) = a1.data == a2.data
+
 function Base.show(io::IO,asset::Asset)
     _printstyled(io, "title: ",title(asset), "\n", bold=true, color=title_color[])
     _printstyled(io, description(asset), "\n")

@@ -38,9 +38,15 @@ end
 
     @test subcat1 isa STAC.Catalog
     testshow(subcat1,"Items")
+    subitems = subcat1.items
+    testshow(subitems, "Parent Catalog")
 
     item = subcat1.items["LC08_L1TP_152038_20200611_20200611_01_RT"]
+    itemint = subcat1.items[1]
+    @test item == itemint
+    @test_throws BoundsError subcat1.items[2]
     testshow(item,"box")
+    testshow(item, "LC08_L1TP_152038_20200611_20200611_01_RT")
 
     @test geometry(item) isa STAC.GeoJSON.Polygon
     @test bbox(item) isa AbstractVector
@@ -84,6 +90,10 @@ end
     @test length(STAC.CACHE) == 0
 end
 
+@testset "Malformed URL" begin
+    @test_throws ArgumentError STAC.Catalog("https://geoservice.dlr.de/eoc/ogc/stac/v1/collections/TDM_FNF_50")
+    @test_throws ArgumentError STAC.Catalog("https://stac.core.eopf.eodc.eu/collections")
+end
 
 
 @testset "search" begin
