@@ -32,7 +32,6 @@ function FeatureCollection(url,query; method=:get, _enctype = :form_urlencoded)
                 r = HTTP.get(url)
             end
             data = JSON3.read(String(r.body))
-
             for d in data[:features]
                 geojson = GeoJSON.read(JSON3.write(d))
                 put!(c,STAC.Item("",d,geojson,STAC._assets(d),nothing))
@@ -148,11 +147,21 @@ function search(cat::Catalog, collections, lon_range, lat_range, time_range;
     end
 
     @debug "full query:" full_query
+    searchurl = getsearchurl(cat.url)
     return FeatureCollection(
-        cat.url * "/search",full_query,
+        searchurl,full_query,
         method = :post,
         _enctype = :json
     )
+end
+
+function getsearchurl(url)
+    r = HTTP.get(url)
+    data = JSON3.read(String(r.body))
+    searchlinks = filter(d -> get(d,"rel",nothing) == "search",data[:links])
+    searchgeojson = filter(d -> get(d,"type",nothing) == "application/geo+json",searchlinks)
+    isnothing(searchgeojson) && ArgumentError("Search not available for $url")
+    searchgeojson[1]["href"]
 end
 
 export search
