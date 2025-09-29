@@ -23,7 +23,7 @@ function FeatureCollection(url,query; method=:get, _enctype = :form_urlencoded)
                     r = HTTP.post(url,[],body=next_request[:body])
                 elseif _enctype == :json
                     b = JSON3.write(next_request[:body])
-                    r = HTTP.post(url,[],b)
+                    r = HTTP.post(url,["Content-Type" => "application/json"],b)
                 else
                     error("unknown encoding for POST $_enctype")
                 end
