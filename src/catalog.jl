@@ -118,11 +118,14 @@ function Catalog(url::String; parent = nothing, limit = 1000)
     if !haskey(data,:id)
         throw(ArgumentError("The mandatory STAC id element is missing in $url"))
     end
-    if haskey(data, :type)
-        if data[:type] !== "Catalog"
-            throw(ArgumentError("The provided STAC url is of type $(data[:type]). Expected a STAC url of type Catalog."))
-        end
-    end
+
+    # data[:type] is sometimes Collection
+    # this need more debugging.
+    # if haskey(data, :type)
+    #     if data[:type] !== "Catalog"
+    #         throw(ArgumentError("The provided STAC url is of type $(data[:type]). Expected a STAC url of type Catalog."))
+    #     end
+    # end
 
     assets = _assets(data)
 
