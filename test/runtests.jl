@@ -163,4 +163,5 @@ end
 
 @testset "providers" begin
     include("test_earth_data.jl")
+    include("test_cdse.jl")
 end

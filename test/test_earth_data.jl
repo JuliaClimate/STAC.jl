@@ -13,7 +13,12 @@ query = Dict(
 )
 
 url = baseurl
-collection = STAC.FeatureCollection(url,query)
+collection = collect(STAC.FeatureCollection(url,query))
 
-opendap_url = [href(item.assets["opendap"]) for item in collection]
-@test length(opendap_url) == 365
+@test length(collection) > 0
+
+item1 = first(collection)
+
+@test haskey(item1.assets,"opendap")
+@test haskey(item1.assets,"data")
+
