@@ -112,7 +112,7 @@ item = subcat1.items["LC08_L1TP_152038_20200611_20200611_01_RT"]
 @show href(item.assets["B4"])
 ```
 """
-function Catalog(url::String; parent = nothing, limit = 200)
+function Catalog(url::String; parent = nothing, limit = 1000)
     data = cached_resolve(url)
 
     if !haskey(data,:id)
