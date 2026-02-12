@@ -90,7 +90,7 @@ function _getindex_guess(listc,fun,id)
 end
 
 """
-    cat = STAC.Catalog(url; limit = 100)
+    cat = STAC.Catalog(url; limit = 1000)
 
 Open a SpatioTemporal Asset Catalog (STAC) using the provided `url`.
 The `url` should point to a JSON object conforming to the
