@@ -31,7 +31,7 @@ display(item)
 # CDSE_USERNAME = "my.email@address.be"
 # CDSE_PASSWORD = "secret" (escape special characters if needed)
 #
-# or define the environnement variables CDSE_USERNAME and CDSE_PASSWORD
+# or define the environment variables CDSE_USERNAME and CDSE_PASSWORD
 # otherwise you will get the error: key "CDSE_USERNAME" not found
 
 CDSE_USERNAME = ENV["CDSE_USERNAME"]
