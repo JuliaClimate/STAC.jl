@@ -34,6 +34,7 @@ end
 
 Get the date time of STAC `item` as a `Dates.DateTime` (or `nothing`
 if this properties is not specified).
+Get the start date time if the item has a timespan instead.
 """
 function DateTime(item::Item)
     # should be UTC
