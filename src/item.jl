@@ -36,13 +36,23 @@ Get the date time of STAC `item` as a `Dates.DateTime` (or `nothing`
 if this properties is not specified).
 """
 function DateTime(item::Item)
-    dt = get(item.data.properties,:datetime,nothing)
-
-    if !isnothing(dt)
-        return CFTime.parseDT(Dates.DateTime,dt)
-    else
-        return nothing
+    # should be UTC
+    # mainly in field datetime
+    try
+        dt = get(item.data.properties, :datetime, nothing)
+        return DateTime(dt, Dates.dateformat"yyyy-mm-ddTHH:MM:SS.sZ")
+    catch
     end
+
+    # may be a range, take the start
+    try
+        dt = get(item.data.properties, :start_datetime, nothing)
+        return DateTime(dt, Dates.dateformat"yyyy-mm-ddTHH:MM:SS.sZ")
+    catch
+    end
+
+    # found nothing
+    return nothing
 end
 export DateTime
 
