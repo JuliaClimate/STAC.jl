@@ -47,6 +47,7 @@ end
     @test_throws BoundsError subcat1.items[2]
     testshow(item,"box")
     testshow(item, "LC08_L1TP_152038_20200611_20200611_01_RT")
+    testshow(item, "date time:")
 
     @test DateTime(item) == DateTime("2020-06-11T05:54:44.65")
     @test STAC.get_datetime(item, :datetime) == DateTime("2020-06-11T05:54:44.65")

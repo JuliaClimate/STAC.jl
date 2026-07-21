@@ -111,7 +111,13 @@ $(west)              $(east)
 
 """)
 
-    _printstyled(io, "date time: ",DateTime(item),"\n")
+    if :start_datetime in keys(item.data.properties) && :end_datetime in keys(item.data.properties)
+        printstyled(io, "start date time: ",get_datetime(item,:start_datetime),"\n")
+        printstyled(io, "  end date time: ",get_datetime(item,:end_datetime),"\n")
+    elseif :datetime in keys(item.data.properties)
+        printstyled(io, "date time: ",get_datetime(item,:datetime),"\n")
+    end
+
     _show_assets(io,item)
 end
 
