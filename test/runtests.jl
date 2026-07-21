@@ -8,13 +8,19 @@ function testshow(s,substr)
     @test occursin(substr,String(take!(io)))
 end
 
+function testshow(mime::Type{<:MIME},s,substr)
+    io = IOBuffer()
+    show(io,mime(),s)
+    @test occursin(substr,String(take!(io)))
+end
+
 @testset "STAC.jl" begin
 
     url = "https://raw.githubusercontent.com/sat-utils/sat-stac/master/test/catalog/catalog.json"
 
     cat = STAC.Catalog(url)
 
-    testshow(cat,"STAC")
+    testshow(MIME"text/plain",cat,"STAC")
 
     @test id(cat) == "stac-catalog"
     @test occursin("1.",stac_version(cat))
@@ -37,7 +43,7 @@ end
     subcat1 = subcat["landsat-8-l1"]
 
     @test subcat1 isa STAC.Catalog
-    testshow(subcat1,"Items")
+    testshow(MIME"text/plain",subcat1,"Items")
     subitems = subcat1.items
     testshow(subitems, "Parent Catalog")
 
@@ -45,7 +51,7 @@ end
     itemint = subcat1.items[1]
     @test item == itemint
     @test_throws BoundsError subcat1.items[2]
-    testshow(item,"box")
+    testshow(MIME"text/plain",item,"box")
     testshow(item, "LC08_L1TP_152038_20200611_20200611_01_RT")
 
     @test geometry(item) isa STAC.GeoJSON.Polygon
@@ -62,7 +68,13 @@ end
     @test keys(item) == keys(item.assets)
     @test values(item) == values(item.assets)
 
-    testshow(assetB4,"type")
+    # plain text show methods
+    testshow(MIME"text/plain", assetB4, "type")
+    testshow(MIME"text/plain", cat, "STAC")
+
+    # compact show methods
+    testshow(assetB4, "Band 4")  # compact Asset show prints title
+    testshow(cat, "stac-catalog")  # compact Catalog show prints id
 
     STAC.set_cache_max_size(10000)
 

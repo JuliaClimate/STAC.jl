@@ -19,9 +19,13 @@ end
 
 (==)(a1::Asset, a2::Asset) = a1.data == a2.data
 
-function Base.show(io::IO,asset::Asset)
+function Base.show(io::IO, mime::MIME"text/plain", asset::Asset)
     _printstyled(io, "title: ",title(asset), "\n", bold=true, color=title_color[])
     _printstyled(io, description(asset), "\n")
     _printstyled(io, "type: ",type(asset), "\n")
     _printstyled(io, "href: ",href(asset), "\n")
+end
+
+function Base.show(io::IO, asset::Asset)
+    print(io, title(asset; default=href(asset)))
 end
