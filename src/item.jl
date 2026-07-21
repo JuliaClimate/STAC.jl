@@ -28,6 +28,18 @@ Get the $($name) of STAC `item`.
     end
 end
 
+"""
+Get the date time of a STAC item field, defaults to UTC.
+Returns `nothing` if the field is not present
+"""
+function get_datetime(item::Item, field::Symbol;
+    date_format::Dates.DateFormat=Dates.dateformat"yyyy-mm-ddTHH:MM:SS.sZ")
+    dt = get(item.data.properties, field, nothing)
+    isnothing(dt) && return nothing
+    dt_utc = DateTime(dt, date_format)
+    return dt_utc
+end
+
 
 """
     dt = DateTime(item)
@@ -37,20 +49,13 @@ if this properties is not specified).
 Get the start date time if the item has a timespan instead.
 """
 function DateTime(item::Item)
-    # should be UTC
     # mainly in field datetime
-    try
-        dt = get(item.data.properties, :datetime, nothing)
-        return DateTime(dt, Dates.dateformat"yyyy-mm-ddTHH:MM:SS.sZ")
-    catch
-    end
+    dt = get_datetime(item, :datetime)
+    !isnothing(dt) && return dt
 
     # may be a range, take the start
-    try
-        dt = get(item.data.properties, :start_datetime, nothing)
-        return DateTime(dt, Dates.dateformat"yyyy-mm-ddTHH:MM:SS.sZ")
-    catch
-    end
+    dt = get_datetime(item, :start_datetime)
+    !isnothing(dt) && return dt
 
     # found nothing
     return nothing
