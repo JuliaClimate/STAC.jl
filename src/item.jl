@@ -28,16 +28,27 @@ Get the $($name) of STAC `item`.
     end
 end
 
-"""
-Get the date time of a STAC item field, defaults to UTC.
-Returns `nothing` if the field is not present
-"""
-function get_datetime(item::Item, field::Symbol;
+function parse_datetime(s::AbstractString;
     date_format::Dates.DateFormat=Dates.dateformat"yyyy-mm-ddTHH:MM:SS.sZ")
-    dt = get(item.data.properties, field, nothing)
-    isnothing(dt) && return nothing
-    dt_utc = DateTime(dt, date_format)
-    return dt_utc
+    
+    # remove default UTC zone
+    if endswith(s,"Z")
+        s = s[1:end-1]
+    end
+    
+    try
+        dt = DateTime(s, date_format)
+        return dt
+    catch e
+        e isa ArgumentError && return nothing
+        rethrow()
+    end
+end
+
+function get_datetime(item::Item, prop::Symbol)
+    s = get(item.data.properties, prop, nothing)
+    isnothing(s) && return nothing
+    return parse_datetime(s)
 end
 
 
