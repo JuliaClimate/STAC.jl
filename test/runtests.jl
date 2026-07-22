@@ -47,6 +47,19 @@ end
     @test_throws BoundsError subcat1.items[2]
     testshow(item,"box")
     testshow(item, "LC08_L1TP_152038_20200611_20200611_01_RT")
+    testshow(item, "date time:")
+
+    @test DateTime(item) == DateTime("2020-06-11T05:54:44.65")
+    @test STAC.datetime(item, :datetime) == DateTime("2020-06-11T05:54:44.65")
+    @test STAC.datetime(item, :start_datetime) === nothing
+    
+    @test STAC.parse_datetime("2026-07-31T11:50:12.123Z") == DateTime("2026-07-31T11:50:12.123")
+    @test STAC.parse_datetime("2026-07-31T11:50:12.123") == DateTime("2026-07-31T11:50:12.123")
+    @test STAC.parse_datetime("2026-07-31T11:50:12") == DateTime("2026-07-31T11:50:12")
+    @test STAC.parse_datetime("2026-07-31T11:50:12Z") == DateTime("2026-07-31T11:50:12")
+    @test STAC.parse_datetime("2026-07-31T11:50") == DateTime("2026-07-31T11:50")
+    @test STAC.parse_datetime("2026-07-31") == DateTime("2026-07-31")
+    @test STAC.parse_datetime("foo") === nothing
 
     @test geometry(item) isa STAC.GeoJSON.Polygon
     @test bbox(item) isa AbstractVector
