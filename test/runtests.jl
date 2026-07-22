@@ -50,8 +50,8 @@ end
     testshow(item, "date time:")
 
     @test DateTime(item) == DateTime("2020-06-11T05:54:44.65")
-    @test STAC.get_datetime(item, :datetime) == DateTime("2020-06-11T05:54:44.65")
-    @test STAC.get_datetime(item, :start_datetime) === nothing
+    @test STAC.datetime(item, :datetime) == DateTime("2020-06-11T05:54:44.65")
+    @test STAC.datetime(item, :start_datetime) === nothing
     
     @test STAC.parse_datetime("2026-07-31T11:50:12.123Z") == DateTime("2026-07-31T11:50:12.123")
     @test STAC.parse_datetime("2026-07-31T11:50:12.123") == DateTime("2026-07-31T11:50:12.123")

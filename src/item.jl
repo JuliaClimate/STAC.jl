@@ -45,7 +45,7 @@ function parse_datetime(s::AbstractString;
     end
 end
 
-function get_datetime(item::Item, prop::Symbol)
+function datetime(item::Item, prop::Symbol)
     s = get(item.data.properties, prop, nothing)
     isnothing(s) && return nothing
     return parse_datetime(s)
@@ -61,11 +61,11 @@ Get the start date time if the item has a timespan instead.
 """
 function DateTime(item::Item)
     # mainly in field datetime
-    dt = get_datetime(item, :datetime)
+    dt = datetime(item, :datetime)
     !isnothing(dt) && return dt
 
     # may be a range, take the start
-    dt = get_datetime(item, :start_datetime)
+    dt = datetime(item, :start_datetime)
     !isnothing(dt) && return dt
 
     # found nothing
@@ -112,10 +112,10 @@ $(west)              $(east)
 """)
 
     if :start_datetime in keys(item.data.properties) && :end_datetime in keys(item.data.properties)
-        printstyled(io, "start date time: ",get_datetime(item,:start_datetime),"\n")
-        printstyled(io, "  end date time: ",get_datetime(item,:end_datetime),"\n")
+        printstyled(io, "start date time: ",datetime(item,:start_datetime),"\n")
+        printstyled(io, "  end date time: ",datetime(item,:end_datetime),"\n")
     elseif :datetime in keys(item.data.properties)
-        printstyled(io, "date time: ",get_datetime(item,:datetime),"\n")
+        printstyled(io, "date time: ",datetime(item,:datetime),"\n")
     end
 
     _show_assets(io,item)
