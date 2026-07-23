@@ -28,21 +28,48 @@ Get the $($name) of STAC `item`.
     end
 end
 
+function parse_datetime(s::AbstractString;
+    date_format::Dates.DateFormat=Dates.dateformat"yyyy-mm-ddTHH:MM:SS.sZ")
+    
+    # remove default UTC zone
+    if endswith(s,"Z")
+        s = s[1:end-1]
+    end
+    
+    try
+        dt = DateTime(s, date_format)
+        return dt
+    catch e
+        e isa ArgumentError && return nothing
+        rethrow()
+    end
+end
+
+function datetime(item::Item, prop::Symbol)
+    s = get(item.data.properties, prop, nothing)
+    isnothing(s) && return nothing
+    return parse_datetime(s)
+end
+
 
 """
     dt = DateTime(item)
 
 Get the date time of STAC `item` as a `Dates.DateTime` (or `nothing`
 if this properties is not specified).
+Get the start date time if the item has a timespan instead.
 """
 function DateTime(item::Item)
-    dt = get(item.data.properties,:datetime,nothing)
+    # mainly in field datetime
+    dt = datetime(item, :datetime)
+    !isnothing(dt) && return dt
 
-    if !isnothing(dt)
-        return CFTime.parseDT(Dates.DateTime,dt)
-    else
-        return nothing
-    end
+    # may be a range, take the start
+    dt = datetime(item, :start_datetime)
+    !isnothing(dt) && return dt
+
+    # found nothing
+    return nothing
 end
 export DateTime
 
@@ -84,7 +111,13 @@ $(west)              $(east)
 
 """)
 
-    _printstyled(io, "date time: ",DateTime(item),"\n")
+    if :start_datetime in keys(item.data.properties) && :end_datetime in keys(item.data.properties)
+        printstyled(io, "start date time: ",datetime(item,:start_datetime),"\n")
+        printstyled(io, "  end date time: ",datetime(item,:end_datetime),"\n")
+    elseif :datetime in keys(item.data.properties)
+        printstyled(io, "date time: ",datetime(item,:datetime),"\n")
+    end
+
     _show_assets(io,item)
 end
 

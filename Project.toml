@@ -1,10 +1,9 @@
 name = "STAC"
 uuid = "08e62803-e111-4f53-be9b-274ff296e9da"
-authors = ["Alexander Barth <barth.alexander@gmail.com> and contributors"]
 version = "0.1.6"
+authors = ["Alexander Barth <barth.alexander@gmail.com> and contributors"]
 
 [deps]
-CFTime = "179af706-886a-5703-950a-314cd64e0468"
 DataStructures = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
 GeoJSON = "61d90e0f-e114-555e-ac52-39dfb47a3ef9"
@@ -16,7 +15,6 @@ Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 URIs = "5c2747f8-b7ea-4ff2-ba2e-563bfd36b1d4"
 
 [compat]
-CFTime = "0.1, 0.2"
 DataStructures = "0.18, 0.19"
 GeoJSON = "0.8"
 HTTP = "0.9, 1"
