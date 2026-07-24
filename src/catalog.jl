@@ -6,7 +6,7 @@ struct Catalog
     limit::Int
 end
 
-function Base.show(io::IO,cat::Catalog)
+function Base.show(io::IO, mime::MIME"text/plain", cat::Catalog)
     printstyled(io, id(cat), "\n", bold=true, color=title_color[])
     _printstyled(io, title(cat), "\n")
     _printstyled(io, description(cat), "\n")
@@ -39,6 +39,10 @@ function Base.show(io::IO,cat::Catalog)
     end
 
     _show_assets(io,cat)
+end
+
+function Base.show(io::IO, cat::Catalog)
+    print(io, id(cat))
 end
 
 

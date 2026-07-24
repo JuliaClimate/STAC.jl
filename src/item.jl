@@ -91,7 +91,7 @@ function Item(url; parent = nothing)
 end
 
 
-function Base.show(io::IO,item::Item)
+function Base.show(io::IO, mime::MIME"text/plain", item::Item)
     fmt(x) = @sprintf("%9.5f",x)
 
     bb = bbox(item);
@@ -121,6 +121,9 @@ $(west)              $(east)
     _show_assets(io,item)
 end
 
+function Base.show(io::IO, item::Item)
+    print(io, id(item))
+end
 
 Base.keys(item::Item) = keys(item.assets)
 Base.values(item::Item) = values(item.assets)
