@@ -27,6 +27,7 @@ license(cat::Catalog)
 providers(cat::Catalog)
 extent(cat::Catalog)
 summaries(cat::Catalog)
+doi(cat::Catalog)
 ```
 
 ## STAC item
