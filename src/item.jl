@@ -9,7 +9,7 @@ end
 
 function (==)(item1::Item, item2::Item)
     comps = [getproperty(item1,k)==getproperty(item2,k) for k in fieldnames(Item)]
-    all(comps) 
+    all(comps)
 end
 # https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md
 

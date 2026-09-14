@@ -156,16 +156,28 @@ function _each_direct_rel(T,catalog::Catalog,rel)
     listc = filter(l -> l[:rel] == String(rel),data[:links])
 
     items_links = filter(l -> l[:rel] == "items",data[:links])
+    collections_links = filter(l -> l[:rel] == "data",data[:links])
 
     if ((rel == :item) &&
-        conforms(root(catalog),CONFORMANCE.item_search) &&
+        # CDSE https://stac.dataspace.copernicus.eu/v1/ conforms to
+        # https://api.stacspec.org/v1.0.0-rc.2/item-search#filter
+        #
+        # conforms(root(catalog),CONFORMANCE.item_search) &&
         (length(items_links) > 0))
 
         url = first(items_links).href
         query = Dict(
             "limit" => limit,
         )
-        return STAC.FeatureCollection(url,query)
+        return STAC.FeatureCollection(STAC.Item,url,query)
+    end
+
+    if ((rel == :child) && (length(collections_links) > 0))
+        url = first(collections_links).href
+        query = Dict(
+            "limit" => limit,
+        )
+        return STAC.FeatureCollection(STAC.Catalog,url,query)
     end
 
     Channel{T}() do c
@@ -221,7 +233,9 @@ children_ids(catalog::Catalog) = _rel_ids(Catalog,catalog,:child)
 child(catalog::Catalog,id::AbstractString) = _rel(Catalog,catalog,:child,id)
 odwtype(::typeof(STAC.child)) = "Children of "
 
-items_ids(catalog::Catalog) = _rel_ids(Item,catalog,:item)
+function items_ids(catalog::Catalog)
+    _rel_ids(Item,catalog,:item)
+end
 item(catalog::Catalog,id::AbstractString) = _rel(Item,catalog,:item,id)
 odwtype(::typeof(STAC.item)) = "Items of "
 

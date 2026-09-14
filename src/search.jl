@@ -1,5 +1,6 @@
 
-function FeatureCollection(url,query; method=:get, _enctype = :form_urlencoded)
+# T is STAC.Item, STAC.catalog...
+function FeatureCollection(T,url,query; method=:get, _enctype = :form_urlencoded)
     next_request =
         if method == :get
             Dict(
@@ -13,7 +14,7 @@ function FeatureCollection(url,query; method=:get, _enctype = :form_urlencoded)
             )
         end
 
-    ch = Channel{STAC.Item}() do c
+    ch = Channel{T}() do c
         while true
             url = next_request[:href]
 
@@ -31,10 +32,18 @@ function FeatureCollection(url,query; method=:get, _enctype = :form_urlencoded)
                 @debug "get $url"
                 r = HTTP.get(url)
             end
-            data = JSON3.read(String(r.body))
-            for d in data[:features]
-                geojson = GeoJSON.read(JSON3.write(d))
-                put!(c,STAC.Item("",d,geojson,STAC._assets(d),nothing))
+            data = JSON.parse(String(r.body))
+
+            if T <: STAC.Item
+                for d in data[:features]
+                    geojson = GeoJSON.read(JSON.json(d))
+                    put!(c,T("",d,geojson,STAC._assets(d),nothing))
+                end
+            elseif T <: STAC.Catalog
+                for collection in data[:collections]
+                    url = only(filter(l -> l[:rel] == "self", collection[:links]))[:href]
+                    put!(c,T(url))
+                end
             end
 
             # check if there is a next page
