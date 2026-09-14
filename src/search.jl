@@ -23,7 +23,7 @@ function FeatureCollection(T,url,query; method=:get, _enctype = :form_urlencoded
                 if _enctype == :form_urlencoded
                     r = HTTP.post(url,[],body=next_request[:body])
                 elseif _enctype == :json
-                    b = JSON3.write(next_request[:body])
+                    b = JSON.json(next_request[:body])
                     r = HTTP.post(url,["Content-Type" => "application/json"],b)
                 else
                     error("unknown encoding for POST $_enctype")
@@ -157,16 +157,19 @@ function search(cat::Catalog, collections, lon_range, lat_range, time_range;
 
     @debug "full query:" full_query
     searchurl = getsearchurl(cat.url)
-    return FeatureCollection(
+    return FeatureCollection(STAC.Item,
         searchurl,full_query,
         method = :post,
         _enctype = :json
     )
 end
 
+
+FeatureCollection(url,query) = FeatureCollection(STAC.Item,url,query)
+
 function getsearchurl(url)
     r = HTTP.get(url)
-    data = JSON3.read(String(r.body))
+    data = JSON.parse(String(r.body))
     searchlinks = filter(d -> get(d,"rel",nothing) == "search",data[:links])
     searchgeojson = filter(d -> get(d,"type",nothing) == "application/geo+json",searchlinks)
     isnothing(searchgeojson) && ArgumentError("Search not available for $url")

@@ -6,13 +6,17 @@ for (prop,name) in ((:href, "URI"),
                     (:title, "title"),
                     (:description, "description"),
                     (:type, "type"))
+
+
+    prop_str = string(prop)
+
     @eval begin
         @doc """
      data = $($prop)(asset; default = nothing)
 
 Get the $($name) of a STAC `asset` (or `default` if it is not specified).
         """
-        $prop(asset::Asset; default = nothing) = get(asset.data,$prop,default)
+        $prop(asset::Asset; default = nothing) = get(asset.data,$prop_str,default)
         export $prop
     end
 end

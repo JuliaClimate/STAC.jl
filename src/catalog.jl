@@ -59,13 +59,15 @@ for (prop,name) in (
     (:extent, "extent"),
     (:summaries, "summaries"),
     )
+
+    prop_str = string(prop)
     @eval begin
         @doc """
     data = $($prop)(cat::Catalog; default = nothing)
 
 Get the $($name) of a STAC catalog (or `default` if it is not specified).
         """
-        $prop(cat::Catalog; default=nothing) = get(cat.data,$prop,default)
+        $prop(cat::Catalog; default=nothing) = get(cat.data,$prop_str,default)
         export $prop
     end
 end

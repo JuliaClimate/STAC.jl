@@ -3,7 +3,7 @@
 
 const CACHE = LRU(maxsize = @load_preference("cache_max_size", 1000))
 
-resolve(url) = JSON3.read(String(HTTP.get(url).body))
+resolve(url) = JSON.parse(String(HTTP.get(url).body))
 
 function cached_resolve(url)
     @debug "url $url in cache: $(haskey(CACHE,url))"

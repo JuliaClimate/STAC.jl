@@ -17,25 +17,28 @@ for (prop,name) in ((:id, "identifier"),
                     (:bbox, "bounding box"),
                     (:links, "links"),
                     (:properties, "properties"))
+
+    prop_str = string(prop)
+
     @eval begin
         @doc """
      data = $($prop)(item)
 
 Get the $($name) of STAC `item`.
         """
-        $prop(item::Item) = item.data[$prop]
+        $prop(item::Item) = item.data[$prop_str]
         export $prop
     end
 end
 
 function parse_datetime(s::AbstractString;
     date_format::Dates.DateFormat=Dates.dateformat"yyyy-mm-ddTHH:MM:SS.sZ")
-    
+
     # remove default UTC zone
     if endswith(s,"Z")
         s = s[1:end-1]
     end
-    
+
     try
         dt = DateTime(s, date_format)
         return dt
@@ -85,7 +88,7 @@ export geometry
 function Item(url; parent = nothing)
     data = cached_resolve(url)
     # is there a better way?
-    geojson = GeoJSON.read(JSON3.write(data))
+    geojson = GeoJSON.read(JSON.json(data))
     assets = _assets(data)
     return Item(url,data,geojson,assets,parent)
 end

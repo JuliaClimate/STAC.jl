@@ -2,7 +2,6 @@ using STAC
 using URIs
 using Test
 using STAC: CONFORMANCE, conforms, match
-using JSON3
 
 c = "https://api.stacspec.org/v1.0.0/item-search"
 

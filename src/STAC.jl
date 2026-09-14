@@ -8,7 +8,7 @@ import GeoJSON: geometry
 using DataStructures
 using GeoJSON
 using HTTP
-using JSON3
+using JSON
 using LRUCache
 using Preferences
 using Printf
